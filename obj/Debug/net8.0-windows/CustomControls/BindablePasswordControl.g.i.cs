@@ -19,6 +19,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.Integration;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -61,7 +62,8 @@ namespace Student_Management.CustomControls {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Student_Management;component/customcontrols/bindablepasswordcontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Student_Management;V1.0.0.0;component/customcontrols/bindablepasswordcontrol.xam" +
+                    "l", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\CustomControls\BindablePasswordControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

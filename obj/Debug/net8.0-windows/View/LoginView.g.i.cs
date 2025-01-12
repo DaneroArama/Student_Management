@@ -21,6 +21,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.Integration;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -87,7 +88,7 @@ namespace Student_Management.View {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Student_Management;component/view/loginview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Student_Management;V1.0.0.0;component/view/loginview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\LoginView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

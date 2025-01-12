@@ -67,3 +67,10 @@ C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\ru
 C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Runtime.Caching.dll
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Style\UIColours.baml
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\App.baml
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Style\ButtonStyles.baml
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\FontAwesome.Sharp.dll
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Student_Management.sourcelink.json
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\HomeView.g.cs
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\HomeView.baml
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\StudentsView.g.cs
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\StudentsView.baml
