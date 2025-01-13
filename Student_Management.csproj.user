@@ -27,6 +27,12 @@
     <Page Update="Style\ButtonStyles.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Style\DataGridStyles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Style\TextBoxStyles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Style\UIColours.xaml">
       <SubType>Designer</SubType>
     </Page>

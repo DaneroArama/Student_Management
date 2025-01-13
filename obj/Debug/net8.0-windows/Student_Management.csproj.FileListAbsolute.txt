@@ -74,3 +74,11 @@ C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Vi
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\HomeView.baml
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\StudentsView.g.cs
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\StudentsView.baml
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\Student_Management.dll.config
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\System.Configuration.ConfigurationManager.dll
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\System.Diagnostics.EventLog.dll
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\System.Security.Cryptography.ProtectedData.dll
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.Messages.dll
+C:\Users\L E N O V O\source\repos\Student_Management\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Style\TextBoxStyles.baml
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Style\DataGridStyles.baml

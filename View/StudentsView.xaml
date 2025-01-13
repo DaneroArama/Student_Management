@@ -4,67 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Student_Management.View" xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:viewModel="clr-namespace:Student_Management.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModel:StudentsViewModel/>
+    </UserControl.DataContext>
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Style/TextBoxStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
+        <!-- Search and Add Button Row -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="100"/> <!-- For Add button -->
+                <ColumnDefinition Width="*"/>   <!-- For Search -->
+                <ColumnDefinition Width="120"/> <!-- For Search button -->
             </Grid.ColumnDefinitions>
 
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Top"
-                        Grid.Column="0">
-                <fa:IconImage Icon="Search" Height="20" Width="20" Foreground="{StaticResource plainTextColor3}"/>
-
-                <TextBox Text="Search..."   
-                    FontSize="13"
-                         Height="24"
-                           Width="300"
-                           Background="Transparent"
-                             FontWeight="Medium"
-                             FontFamily="Montserrat"                            
-                             Foreground="{StaticResource plainTextColor3}"
-                             CaretBrush="{StaticResource plainTextColor3}"
-                             BorderBrush="{StaticResource plainTextColor3}"
-                             BorderThickness="0,0,0,1"                             
-                             VerticalContentAlignment="Center"
-                             Margin="5,5,0,0"></TextBox>
-
-            </StackPanel>
-
-            <Button Grid.Column="1"
-                            Command="{Binding LoginCommand}"                            
-                            Content="Search"                            
-                            FontSize="12"
-                            FontFamily="Montserrat"
-                            Cursor="Hand"
-                            BorderThickness="0"
-                            Foreground="White"
-                    VerticalAlignment="Top">
-
+            <!-- Add Button -->
+            <Button Grid.Column="0"
+                    Content="Add"
+                    Command="{Binding AddCommand}"
+                    Width="80"
+                    Height="30"
+                    HorizontalAlignment="Left"
+                    Margin="10,0,0,0">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="#773DFF"/>
+                        <Setter Property="Foreground" Value="White"/>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Button">
                                     <Border Height="30"
-                                                    CornerRadius="15"
-                                                    Background="{TemplateBinding Background}">
+                                            CornerRadius="15"
+                                            Background="{TemplateBinding Background}">
                                         <ContentPresenter VerticalAlignment="Center"
-                                                                      HorizontalAlignment="Center"/>
+                                                        HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
-
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#836EFB"/>
@@ -73,34 +65,357 @@
                     </Style>
                 </Button.Style>
             </Button>
+
+            <!-- Search Box -->
+            <StackPanel Grid.Column="1" 
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <fa:IconImage Icon="Search" 
+                             Height="20" 
+                             Width="20" 
+                             Foreground="{StaticResource plainTextColor3}"/>
+                
+                <Grid Width="300">
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Height="24"
+                             Background="Transparent"
+                             FontWeight="Medium"
+                             FontFamily="Montserrat"
+                             Foreground="{StaticResource plainTextColor3}"
+                             CaretBrush="{StaticResource plainTextColor3}"
+                             BorderBrush="{StaticResource plainTextColor3}"
+                             BorderThickness="0,0,0,1"
+                             VerticalContentAlignment="Center"
+                             Margin="5,5,0,0"/>
+                    
+                    <!-- Clear Search Button -->
+                    <Button HorizontalAlignment="Right"
+                            Width="20"
+                            Height="20"
+                            Margin="0,5,5,0"
+                            Command="{Binding ClearSearchCommand}"
+                            Visibility="{Binding SearchText, Converter={StaticResource StringToVisibilityConverter}}">
+                        <fa:IconImage Icon="Xmark" 
+                                    Height="12" 
+                                    Width="12" 
+                                    Foreground="{StaticResource plainTextColor3}"/>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </StackPanel>
         </Grid>
-        <Border Grid.Row="1"
-                Background="#200F53"
-                CornerRadius="10" 
-                Padding="10">
 
-            <DataGrid ColumnWidth="*"
-                  Background="#200F53"
-                  BorderThickness="0">
+        <Grid Grid.Row="1">
+            <Border x:Name="ListViewContent"
+                    Background="#200F53"
+                    CornerRadius="10" 
+                    Padding="10"
+                    Visibility="{Binding IsListVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <DataGrid ItemsSource="{Binding Students}"
+                          SelectedItem="{Binding SelectedStudent}"
+                          IsReadOnly="True"
+                          ColumnWidth="*"
+                          AutoGenerateColumns="False"
+                          Background="#200F53"
+                          BorderThickness="0"
+                          RowBackground="#252525"
+                          AlternatingRowBackground="#2A2A2A"
+                          Foreground="White"
+                          HorizontalGridLinesBrush="#444"
+                          VerticalGridLinesBrush="#444">
 
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="#BCBEE0"/>
-                        <Setter Property="Padding" Value="10,0,0,10"/>
-                        <Setter Property="FontFamily" Value="Montserrat"/>
-                        <Setter Property="FontSize" Value="15"/>
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
+                    <!-- Column Header Style -->
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#BCBEE0"/>
+                            <Setter Property="Padding" Value="10,0,0,10"/>
+                            <Setter Property="FontFamily" Value="Montserrat"/>
+                            <Setter Property="FontSize" Value="15"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="ID" HeaderStringFormat=""/>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Photo" HeaderStringFormat=""/>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Name"/>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Phone"/>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Address"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
+                    <!-- Cell Style -->
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontFamily" Value="Montserrat"/>
+                            <Setter Property="FontSize" Value="15"/>
+                            <Setter Property="Padding" Value="7"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#773DFF"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding RollNo}" Header="Roll No"/>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                        <DataGridTextColumn Binding="{Binding Year}" Header="Year"/>
+                        <DataGridTextColumn Binding="{Binding Semester}" Header="Semester"/>
+                        <DataGridTextColumn Binding="{Binding Phone}" Header="Phone"/>
+                        <DataGridTextColumn Binding="{Binding Address}" Header="Address"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Border x:Name="EditViewContent"
+                    Background="#200F53"
+                    CornerRadius="10" 
+                    Padding="20"
+                    Visibility="{Binding IsEditVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="61*"/>
+                        <ColumnDefinition Width="34*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- TextBox Section -->
+                    <StackPanel Grid.Row="0" 
+                                Grid.ColumnSpan="2" 
+                                Margin="0,0,0,20" 
+                                Background="#200F53">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="150" 
+                                    Height="150" 
+                                    BorderThickness="1" 
+                                    BorderBrush="White" 
+                                    Margin="0,0,20,0">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding EditingStudent.ProfileImageSource}" 
+                                               Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+                            
+                            <Button Content="Upload Picture"
+                                    Command="{Binding UploadImageCommand}"
+                                    Width="120"
+                                    Height="30"
+                                    VerticalAlignment="Bottom">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="#773DFF"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Height="30"
+                                                            CornerRadius="15"
+                                                            Background="{TemplateBinding Background}">
+                                                        <ContentPresenter VerticalAlignment="Center"
+                                                                HorizontalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#836EFB"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+
+                        <TextBlock Text="Roll No:" 
+                                  Foreground="White"
+                                  FontFamily="Montserrat"/>
+                        <TextBox Text="{Binding EditingStudent.RollNo}"
+                                 Style="{StaticResource {x:Type TextBox}}"/>
+
+                        <TextBlock Text="Name:" 
+                                  Foreground="White"
+                                  FontFamily="Montserrat"/>
+                        <TextBox Text="{Binding EditingStudent.Name}"
+                                 Style="{StaticResource {x:Type TextBox}}"/>
+
+                        <TextBlock Text="Year:" 
+                                  Foreground="White"
+                                  FontFamily="Montserrat"/>
+                        <TextBox Text="{Binding EditingStudent.Year}"
+                                 Style="{StaticResource {x:Type TextBox}}"/>
+
+                        <TextBlock Text="Semester:" 
+                                  Foreground="White"
+                                  FontFamily="Montserrat"/>
+                        <TextBox Text="{Binding EditingStudent.Semester}"
+                                 Style="{StaticResource {x:Type TextBox}}"/>
+
+                        <TextBlock Text="Phone:" 
+                                  Foreground="White"
+                                  FontFamily="Montserrat"/>
+                        <TextBox Text="{Binding EditingStudent.Phone}"
+                                 Style="{StaticResource {x:Type TextBox}}"/>
+
+                        <TextBlock Text="Address:" 
+                                  Foreground="White"
+                                  FontFamily="Montserrat"/>
+                        <TextBox Text="{Binding EditingStudent.Address}"
+                                 Style="{StaticResource {x:Type TextBox}}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Button Panel -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Margin="0,10,10,0">
+
+            <!-- Action Buttons - Only visible in list view -->
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding IsListVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <!-- Delete Button -->
+                <Button Content="Delete"
+                        Command="{Binding DeleteCommand}"
+                        Width="100"
+                        Height="30"
+                        Margin="5,0"
+                        IsEnabled="{Binding IsStudentSelected}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#FF4444"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Height="30"
+                                                CornerRadius="15"
+                                                Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF6666"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="#999999"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Edit Button -->
+                <Button Content="Edit"
+                        Command="{Binding EditCommand}"
+                        Width="100"
+                        Height="30"
+                        Margin="5,0"
+                        IsEnabled="{Binding IsStudentSelected}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#773DFF"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Height="30"
+                                                CornerRadius="15"
+                                                Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#836EFB"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+
+            <!-- Edit Mode Buttons - Only visible in edit view -->
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding IsEditVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <!-- Save Button -->
+                <Button Content="Save"
+                        Command="{Binding SaveCommand}"
+                        Width="100"
+                        Height="30"
+                        Margin="5,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#773DFF"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Height="30"
+                                                CornerRadius="15"
+                                                Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#836EFB"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Cancel Button -->
+                <Button Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Width="100"
+                        Height="30"
+                        Margin="5,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#773DFF"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Height="30"
+                                                CornerRadius="15"
+                                                Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#836EFB"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

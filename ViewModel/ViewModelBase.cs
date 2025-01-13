@@ -8,7 +8,7 @@ using  System.ComponentModel;
 
 namespace Student_Management.ViewModel
 {
-    public abstract class ViewModelBase: INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName)
