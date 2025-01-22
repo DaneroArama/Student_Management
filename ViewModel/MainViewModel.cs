@@ -8,6 +8,7 @@ using System.Windows.Input;
 using FontAwesome.Sharp;
 using Student_Management.Model;
 using Student_Management.Repository;
+using Student_Management.View;
 
 namespace Student_Management.ViewModel
 {
@@ -71,6 +72,8 @@ namespace Student_Management.ViewModel
         //-->Commands
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowStudentViewCommand { get; }
+        public ICommand ShowAttendanceViewCommand { get; }
+        public ICommand ShowSettingsViewCommand { get; }
 
         public MainViewModel()
         {
@@ -79,6 +82,8 @@ namespace Student_Management.ViewModel
             //Initialize Commands
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowStudentViewCommand = new ViewModelCommand(ExecuteShowStudentViewCommand);
+            ShowAttendanceViewCommand = new ViewModelCommand(ExecuteShowAttendanceViewCommand);
+            ShowSettingsViewCommand = new ViewModelCommand(ExecuteShowSettingsViewCommand);
             //Default View
             ExecuteShowHomeViewCommand(null);
             LoadCurrentUserData();
@@ -97,6 +102,20 @@ namespace Student_Management.ViewModel
             Icon = IconChar.UserGraduate;
         }
 
+        private void ExecuteShowAttendanceViewCommand(object obj)
+        {
+            CurrentChildView = new AttendanceViewModel();
+            Caption = "Attendance";
+            Icon = IconChar.CalendarCheck;
+        }
+
+        private void ExecuteShowSettingsViewCommand(object obj)
+        {
+            CurrentChildView = new SettingsViewModel() as ViewModelBase;
+            Caption = "Settings";
+            Icon = IconChar.Gear;
+        }
+        
         private void LoadCurrentUserData()
         {
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
