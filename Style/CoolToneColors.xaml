@@ -1,0 +1,66 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Background Colors-->
+    <Color x:Key="primaryBackColor1">#001F3F</Color>
+    <!-- Deep blue -->
+    <Color x:Key="primaryBackColor2">#003366</Color>
+    <!-- Dark blue -->
+    <Color x:Key="secondaryBackColor1">#004080</Color>
+    <!-- Rich blue -->
+    <Color x:Key="secondaryBackColor2">#00509E</Color>
+    <!-- Vibrant blue -->
+
+    <!--Window Border Colors-->
+    <Color x:Key="winBorderColor1">#0074D9</Color>
+    <!-- Sky blue -->
+    <Color x:Key="winBorderColor2">#00A1E4</Color>
+    <!-- Light blue -->
+    <Color x:Key="winBorderColor3">#89CFF0</Color>
+    <!-- Pastel blue -->
+
+    <!--Color Palette-->
+    <SolidColorBrush x:Key="color1" Color="#E0F7FF"/>
+    <!-- Light cyan -->
+    <SolidColorBrush x:Key="color2" Color="#A6D9FF"/>
+    <!-- Soft blue -->
+    <SolidColorBrush x:Key="color3" Color="#66C1FF"/>
+    <!-- Bright blue -->
+    <SolidColorBrush x:Key="color4" Color="#007ACC"/>
+    <!-- Bold blue -->
+    <SolidColorBrush x:Key="color5" Color="#3399FF"/>
+    <!-- Medium blue -->
+    <SolidColorBrush x:Key="color6" Color="#CDEFFF"/>
+    <!-- Light pastel blue -->
+    <SolidColorBrush x:Key="color7" Color="#99D4FF"/>
+    <!-- Aqua blue -->
+    <SolidColorBrush x:Key="color8" Color="#B3E0FF"/>
+    <!-- Pale blue -->
+    <SolidColorBrush x:Key="color9" Color="#D9F3FF"/>
+    <!-- Ice blue -->
+    <SolidColorBrush x:Key="color10" Color="#F5FCFF"/>
+    <!-- Almost white blue -->
+
+    <!--Font Colors-->
+    <SolidColorBrush x:Key="titleColor1" Color="#FFFFFF"/>
+    <!-- Pure white -->
+    <SolidColorBrush x:Key="titleColor2" Color="#F0F8FF"/>
+    <!-- Alice blue -->
+    <SolidColorBrush x:Key="titleColor3" Color="#D9EAF8"/>
+    <!-- Soft white-blue -->
+    <SolidColorBrush x:Key="plainTextColor1" Color="#B0C4DE"/>
+    <!-- Light steel blue -->
+    <SolidColorBrush x:Key="plainTextColor2" Color="#A9C7DF"/>
+    <!-- Cool gray-blue -->
+    <SolidColorBrush x:Key="plainTextColor3" Color="#87AFC7"/>
+    <!-- Lighter cool gray-blue -->
+
+    <!--Panel Colors-->
+    <SolidColorBrush x:Key="panelColor" Color="#002147"/>
+    <!-- Navy blue -->
+    <SolidColorBrush x:Key="panelOverColor" Color="#003366"/>
+    <!-- Rich dark blue -->
+    <SolidColorBrush x:Key="panelActiveColor" Color="#004488"/>
+    <!-- Medium rich blue -->
+
+</ResourceDictionary>

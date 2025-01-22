@@ -30,6 +30,9 @@
     <Page Update="Style\ButtonStyles.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Style\CoolToneColors.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Style\DataGridStyles.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -43,6 +46,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\HomeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\SettingsView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MainView.xaml">

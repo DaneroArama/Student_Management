@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Student_Management.View;
+using System.Windows;
 
 namespace Student_Management.ViewModel
 {
     public class SettingsViewModel : ViewModelBase
     {
-        private string _selectedTheme = string.Empty; // Initialize to avoid CS8618
+        private string _selectedTheme;
         public List<string> Themes { get; set; }
 
         public string SelectedTheme
@@ -15,10 +16,10 @@ namespace Student_Management.ViewModel
             get => _selectedTheme;
             set
             {
-                if (_selectedTheme != value) // Check if the value has changed
+                if (_selectedTheme != value)
                 {
                     _selectedTheme = value;
-                    OnPropertyChanged(nameof(SelectedTheme)); // Pass the property name
+                    OnPropertyChanged(nameof(SelectedTheme));
                     ChangeTheme(_selectedTheme);
                 }
             }
@@ -26,21 +27,33 @@ namespace Student_Management.ViewModel
 
         public SettingsViewModel()
         {
-            Themes = new List<string> { "Light", "Dark" };
-            SelectedTheme = Themes[0]; // Default to Light theme
+            Themes = new List<string> { "Purple", "Cool Tone" };
+            SelectedTheme = Themes[0]; // Default to Purple theme
         }
-
         private void ChangeTheme(string theme)
         {
-            // Logic to change the application theme
-            // This could involve changing resource dictionaries or application styles
-            if (theme == "Dark")
+            ResourceDictionary resourceDict = Application.Current.Resources;
+
+            // Clear existing resources
+            resourceDict.MergedDictionaries.Clear();
+
+            if (theme == "Cool Tone")
             {
-                // Set dark theme resources
+                // Load the cool tone colors
+                var coolToneDict = new ResourceDictionary
+                {
+                    Source = new Uri("Style/CoolToneColors.xaml", UriKind.Relative)
+                };
+                resourceDict.MergedDictionaries.Add(coolToneDict);
+                MessageBox.Show("Cool Tone theme applied."); // Debug message
             }
             else
             {
-                // Set light theme resources
+                // Load the original colors (assuming you have a default colors file)
+                var defaultDict = new ResourceDictionary
+                {
+                    Source = new Uri("Style/UIColours.xaml", UriKind.Relative)
+                };
             }
         }
     }
