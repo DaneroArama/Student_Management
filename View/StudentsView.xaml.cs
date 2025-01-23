@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Student_Management.ViewModel;
 
 namespace Student_Management.View
 {
@@ -23,6 +24,7 @@ namespace Student_Management.View
         public StudentsView()
         {
             InitializeComponent();
+            this.DataContext = new StudentsViewModel();
         }
     }
 }
