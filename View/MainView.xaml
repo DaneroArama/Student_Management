@@ -26,6 +26,9 @@
         <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
             <local:SettingsView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:AttendanceViewModel}">
+            <local:AttendanceView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Border CornerRadius="10" BorderThickness="3" Opacity="0.95">

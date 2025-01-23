@@ -1,0 +1,20 @@
+<UserControl x:Class="Student_Management.View.CustomCalendar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="CustomCalendarControl">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding SelectedDate, ElementName=CustomCalendarControl}" 
+                   FontSize="24" 
+                   HorizontalAlignment="Center" 
+                   Margin="10"/>
+
+        <UniformGrid Grid.Row="1" Rows="6" Columns="7" x:Name="DaysGrid">
+            <!-- Days will be added here dynamically -->
+        </UniformGrid>
+    </Grid>
+</UserControl>
