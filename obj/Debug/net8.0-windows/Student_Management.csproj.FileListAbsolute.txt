@@ -88,3 +88,5 @@ C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\Vi
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\SettingsView.baml
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\CustomCalendar.baml
 C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\CustomCalendar.g.cs
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\AttendanceDetailView.g.cs
+C:\Users\L E N O V O\source\repos\Student_Management\obj\Debug\net8.0-windows\View\AttendanceDetailView.baml

@@ -1,47 +1,68 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using Student_Management.ViewModel;
 
 namespace Student_Management.View
 {
     public partial class CustomCalendar : UserControl
     {
-        public DateTime SelectedDate { get; set; }
+        public static readonly DependencyProperty SelectedDateProperty = DependencyProperty.Register(
+            nameof(SelectedDate),
+            typeof(DateTime),
+            typeof(CustomCalendar),
+            new PropertyMetadata(DateTime.Now, OnSelectedDateChanged)
+        );
+
+        public DateTime SelectedDate
+        {
+            get { return (DateTime)GetValue(SelectedDateProperty); }
+            set { SetValue(SelectedDateProperty, value); }
+        }
 
         public CustomCalendar()
         {
             InitializeComponent(); // Connects to CustomCalendar.xaml
-            SelectedDate = DateTime.Now;
-            LoadCalendar(SelectedDate);
+            LoadCalendar(DateTime.Now); // Load the current month by default
+        }
+
+        private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (CustomCalendar)d;
+            control.LoadCalendar((DateTime)e.NewValue);
         }
 
         public void LoadCalendar(DateTime date)
         {
-            // Set the selected date to the first day of the given month
-            SelectedDate = new DateTime(date.Year, date.Month, 1);
-
-            // Clear previous children in the grid
+            SelectedDate = new DateTime(date.Year, date.Month, 1); // Set to the first day of the month
             DaysGrid.Children.Clear();
 
-            // Get the number of days in the month and the start day
             int daysInMonth = DateTime.DaysInMonth(date.Year, date.Month);
-            int startDay = (int)SelectedDate.DayOfWeek;
+            int startDay = (int)new DateTime(date.Year, date.Month, 1).DayOfWeek;
 
-            // Add empty placeholders for days of the previous month
+            // Add empty days for the previous month
             for (int i = 0; i < startDay; i++)
             {
                 DaysGrid.Children.Add(new TextBlock { Text = "", Margin = new Thickness(5) });
             }
 
-            // Add buttons for each day in the current month
+            // Add days of the current month
             for (int day = 1; day <= daysInMonth; day++)
             {
                 var dayButton = new Button
                 {
-                    Content = day.ToString(),
+                    Content = day,
                     Margin = new Thickness(5),
                     Tag = new DateTime(date.Year, date.Month, day)
                 };
+
+                // Highlight weekends
+                var currentDate = new DateTime(date.Year, date.Month, day);
+                if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    dayButton.Background = Brushes.Red; // Highlight weekends in red
+                }
 
                 // Add click event handler
                 dayButton.Click += DayButton_Click;
@@ -55,14 +76,39 @@ namespace Student_Management.View
         {
             if (sender is Button button && button.Tag is DateTime date)
             {
-                MessageBox.Show($"You selected: {date.ToShortDateString()}");
-
-                // Example: Call a method in AttendanceView (if it's the parent control)
-                if (this.Parent is AttendanceView attendanceView)
+                // Find the AttendanceView in the visual tree
+                AttendanceView attendanceView = FindParent<AttendanceView>(this);
+                if (attendanceView != null)
                 {
-                    attendanceView.LoadAttendanceForDate(date);
+                    // Load the AttendanceDetailView
+                    var attendanceDetailView = new AttendanceDetailView
+                    {
+                        DataContext = new AttendanceDetailViewModel
+                        {
+                            SelectedDate = date // Set the selected date
+                        }
+                    };
+
+                    // Set the content to AttendanceDetailView
+                    attendanceView.ContentControl.Content = attendanceDetailView;
                 }
             }
+        }
+
+        // Method to refresh the calendar based on the selected date
+        public void RefreshCalendar(DateTime date)
+        {
+            LoadCalendar(date);
+        }
+
+        // Helper method to find the parent of a specific type in the visual tree
+        private T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null) return null;
+
+            T parent = parentObject as T;
+            return parent ?? FindParent<T>(parentObject);
         }
     }
 }

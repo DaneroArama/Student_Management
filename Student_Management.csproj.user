@@ -10,6 +10,9 @@
     <Compile Update="CustomControls\BindablePasswordControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\AttendanceDetailView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\AttendanceView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -37,6 +40,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Style\UIColours.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\AttendanceDetailView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\AttendanceView.xaml">

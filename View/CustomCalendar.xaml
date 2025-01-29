@@ -8,7 +8,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding SelectedDate, ElementName=CustomCalendarControl}" 
+        <TextBlock Text="{Binding SelectedDate, StringFormat='MMMM yyyy'}" 
                    FontSize="24" 
                    HorizontalAlignment="Center" 
                    Margin="10"/>

@@ -8,8 +8,26 @@
         <viewModel:AttendanceViewModel/>
     </UserControl.DataContext>
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Style/TextBoxStyles.xaml"/>
+                <ResourceDictionary Source="../Style/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
-        <local:CustomCalendar x:Name="CustomCalendarControl"/>
+        <StackPanel>
+            <TextBlock Text="Select Date:" FontSize="16" Margin="10"/>
+            <DatePicker x:Name="DatePicker" Margin="10"/>
+            <Button Content="Confirm" Click="ConfirmButton_Click" Margin="10" Style="{StaticResource RoundedButtonStyle}"/>
+            <local:CustomCalendar x:Name="CustomCalendarControl" SelectedDate="{Binding SelectedDate, Mode=TwoWay}" Height="300"/>
+        </StackPanel>
+        
+        <!-- ContentControl to display AttendanceDetailView -->
+        <ContentControl x:Name="ContentControl" Grid.Row="1" Margin="10" />
+
         <!-- Pop-up for Attendance Details -->
         <Popup x:Name="AttendancePopup" StaysOpen="False" Placement="Mouse">
             <Border Background="White" Padding="10" BorderBrush="Gray" BorderThickness="1">
