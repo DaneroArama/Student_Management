@@ -9,7 +9,6 @@
         Title="MainView" Height="600" Width="1080"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        Background="Transparent"
         AllowsTransparency="True">
 
     <Window.DataContext>
@@ -23,15 +22,18 @@
         <DataTemplate DataType="{x:Type viewModel:StudentsViewModel}">
             <local:StudentsView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
-            <local:SettingsView/>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:AttendanceViewModel}">
             <local:AttendanceView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:MarksViewModel}">
+            <local:MarksView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+            <local:SettingsView/>
+        </DataTemplate>
     </Window.Resources>
 
-    <Border CornerRadius="10" BorderThickness="3" Opacity="0.95">
+    <Border CornerRadius="10" BorderThickness="3">
         <Border.BorderBrush>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="{StaticResource winBorderColor1}" Offset="0" />
@@ -47,8 +49,8 @@
                 <!--Content Section-->
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!--Navigation Menu-->
             
+            <!--Navigation Menu-->
         <Border CornerRadius="10,0,0,10"
             Grid.Column="0">
                 <Border.Background>
@@ -65,7 +67,7 @@
                                 Margin="15,25,0,40">
                         <Image Source="../Images/Logo.png"
                                 Height="30"/>
-                        <TextBlock  Text="Danero"
+                        <TextBlock  Text="CS Department"
                                     Foreground="{StaticResource titleColor2}"
                                     FontSize="20"
                                     FontFamily="Montserrat"
@@ -103,20 +105,29 @@
                     </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource color4}">
+                                 Tag="{StaticResource color4}"
+                                 Command="{Binding ShowMarksViewCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="Marker" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Marks" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+
+
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource color5}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Bell" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Notification" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
 
-
                     <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource color5}"
+                                 Tag="{StaticResource color6}"
                                  Command="{Binding ShowSettingsViewCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <fa:IconImage Icon="Gear" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Setting" Style="{StaticResource menuButtonText}"/>
+                            <fa:IconImage Icon="BookBookmark" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Academic" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
                 </StackPanel>
@@ -203,9 +214,20 @@
                                     Margin="0,0,10,0">
 
                             <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color1}">
+                                    Tag="{StaticResource color1}"
+                                    Click="DropdownButton_Click">
                                 <fa:IconImage Icon="AngleDown" Style="{StaticResource iconButtonIcon}"/>
                             </Button>
+
+                            <Popup x:Name="SignOutPopup" Placement="Bottom" StaysOpen="False">
+                                <Border Background="White" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="5">
+                                    <StackPanel>
+                                        <Button Content="Sign Out" Command="{Binding SignOutCommand}" 
+                                                Style="{StaticResource RoundedButtonStyle}" 
+                                                Margin="5" />
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
 
                             <TextBlock Text="{Binding CurrentUserAccount.DisplayName}"
                                        Foreground="{StaticResource titleColor2}"
@@ -224,35 +246,36 @@
                             </Ellipse>
                             
                             <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color3}">
-                                    <fa:IconImage Icon="Clock"
-                                                  Style="{StaticResource iconButtonIcon}"
-                                                  Height="20"
-                                                  Width="20"/>
+                                    Tag="{StaticResource color3}"
+                                    Margin="0,0,10,0">
+                                <fa:IconImage Icon="Clock"
+                                              Style="{StaticResource iconButtonIcon}"
+                                              Height="20"
+                                              Width="20"/>
                             </Button>
 
                             <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color4}">
-                                    <fa:IconImage Icon="Envelope"
-                                                  Style="{StaticResource iconButtonIcon}"
-                                                  Height="20"
-                                                  Width="20"/>
+                                    Tag="{StaticResource color4}"
+                                    Margin="0,0,10,0">
+                                <fa:IconImage Icon="Envelope"
+                                              Style="{StaticResource iconButtonIcon}"
+                                              Height="20"
+                                              Width="20"/>
                             </Button>
 
                             <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color1}">
-                                    <fa:IconImage Icon="Bell"
-                                                  Style="{StaticResource iconButtonIcon}"
-                                                  Height="20"
-                                                  Width="20"/>
+                                    Tag="{StaticResource color1}"
+                                    Margin="0,0,10,0">
+                                <fa:IconImage Icon="Bell"
+                                              Style="{StaticResource iconButtonIcon}"
+                                              Height="20"
+                                              Width="20"/>
                             </Button>
 
                         </StackPanel>
                     </Grid>
 
-                    <ContentControl Content="{Binding CurrentChildView}"
-                                    Grid.Row="2"
-                                    Margin="25"/>
+                    <ContentControl x:Name="MainContent" Content="{Binding CurrentChildView}" Grid.Row="2" Margin="25"/>
                 </Grid>
             </Border>
         </Grid>

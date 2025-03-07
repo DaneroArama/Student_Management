@@ -57,5 +57,10 @@ namespace Student_Management
                 this.WindowState = WindowState.Normal;
             }
         }
+
+        private void DropdownButton_Click(object sender, RoutedEventArgs e)
+        {
+            SignOutPopup.IsOpen = !SignOutPopup.IsOpen;
+        }
     }
 }

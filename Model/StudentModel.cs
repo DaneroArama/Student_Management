@@ -18,5 +18,6 @@ namespace Student_Management.Model
         public string Address { get; set; }
         public string ProfilePicture { get; set; }
         public ImageSource ProfileImageSource { get; set; }
+        public bool IsPresent { get; set; }
     }
 }

@@ -7,18 +7,16 @@
              xmlns:viewModel="clr-namespace:Student_Management.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <viewModel:StudentsViewModel/>
-    </UserControl.DataContext>
-    
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Style/TextBoxStyles.xaml"/>
+                <ResourceDictionary  Source="../Style/ComboBoxStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -29,9 +27,16 @@
         <!-- Search and Add Button Row -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/> <!-- For Add button -->
-                <ColumnDefinition Width="*"/>   <!-- For Search -->
-                <ColumnDefinition Width="120"/> <!-- For Search button -->
+                <ColumnDefinition Width="100"/>
+                <!-- For Add button -->
+                <ColumnDefinition Width="*"/>
+                <!-- For Search -->
+                <ColumnDefinition Width="120"/>
+                <!-- For Search button -->
+                <ColumnDefinition Width="100"/>
+                <!-- For Year filter -->
+                <ColumnDefinition Width="100"/>
+                <!-- For Semester filter -->
             </Grid.ColumnDefinitions>
 
             <!-- Add Button -->
@@ -75,7 +80,7 @@
                              Height="20" 
                              Width="20" 
                              Foreground="{StaticResource plainTextColor3}"/>
-                
+
                 <Grid Width="300">
                     <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                              Height="24"
@@ -88,7 +93,7 @@
                              BorderThickness="0,0,0,1"
                              VerticalContentAlignment="Center"
                              Margin="5,5,0,0"/>
-                    
+
                     <!-- Clear Search Button -->
                     <Button HorizontalAlignment="Right"
                             Width="20"
@@ -109,11 +114,45 @@
                     </Button>
                 </Grid>
             </StackPanel>
+
+            <!-- Year Filter -->
+            <ComboBox Grid.Column="2"
+                      Height="30"
+                      SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                      ItemsSource="{Binding YearOptions}" 
+                      Margin="5,10,50,10"
+                      Style="{StaticResource ComboBoxStyles}" Grid.ColumnSpan="2">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" 
+                                   Foreground="White"
+                                   FontFamily="Montserrat"
+                                   FontSize="12"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!-- Semester Filter -->
+            <ComboBox Grid.Column="3"
+                      Height="30"
+                      SelectedItem="{Binding SelectedSemester, Mode=TwoWay}"
+                      ItemsSource="{Binding SemesterOptions}" 
+                      Margin="60,10,20,10"
+                      Style="{StaticResource ComboBoxStyles}" Grid.ColumnSpan="2">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" 
+                                   Foreground="White"
+                                   FontFamily="Montserrat"
+                                   FontSize="12"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <Grid Grid.Row="1">
             <Border x:Name="ListViewContent"
-                    Background="#200F53"
+                    Background="DarkGray"
                     CornerRadius="10" 
                     Padding="10"
                     Visibility="{Binding IsListVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -122,11 +161,11 @@
                           IsReadOnly="True"
                           ColumnWidth="*"
                           AutoGenerateColumns="False"
-                          Background="#200F53"
+                          Background="DarkGray"
                           BorderThickness="0"
                           RowBackground="#252525"
                           AlternatingRowBackground="#2A2A2A"
-                          Foreground="White"
+                          Foreground="Black"
                           HorizontalGridLinesBrush="#444"
                           VerticalGridLinesBrush="#444">
 
@@ -134,7 +173,7 @@
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="#BCBEE0"/>
+                            <Setter Property="Foreground" Value="Black"/>
                             <Setter Property="Padding" Value="10,0,0,10"/>
                             <Setter Property="FontFamily" Value="Montserrat"/>
                             <Setter Property="FontSize" Value="15"/>
@@ -157,8 +196,8 @@
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#773DFF"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="SlateGray"/>
+                                    <Setter Property="Foreground" Value="Black"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -176,7 +215,7 @@
             </Border>
 
             <Border x:Name="EditViewContent"
-                    Background="#200F53"
+                    Background="DarkGray"
                     CornerRadius="10" 
                     Padding="20"
                     Visibility="{Binding IsEditVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -194,7 +233,7 @@
                     <StackPanel Grid.Row="0" 
                                 Grid.ColumnSpan="2" 
                                 Margin="0,0,0,20" 
-                                Background="#200F53">
+                                Background="DarkGray">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <Border Width="150" 
                                     Height="150" 
@@ -206,7 +245,7 @@
                                                Stretch="UniformToFill"/>
                                 </Border.Background>
                             </Border>
-                            
+
                             <Button Content="Upload Picture"
                                     Command="{Binding UploadImageCommand}"
                                     Width="120"
@@ -239,37 +278,37 @@
                         </StackPanel>
 
                         <TextBlock Text="Roll No:" 
-                                  Foreground="White"
+                                  Foreground="Black"
                                   FontFamily="Montserrat"/>
                         <TextBox Text="{Binding EditingStudent.RollNo}"
                                  Style="{StaticResource {x:Type TextBox}}"/>
 
                         <TextBlock Text="Name:" 
-                                  Foreground="White"
+                                  Foreground="Black"
                                   FontFamily="Montserrat"/>
                         <TextBox Text="{Binding EditingStudent.Name}"
                                  Style="{StaticResource {x:Type TextBox}}"/>
 
                         <TextBlock Text="Year:" 
-                                  Foreground="White"
+                                  Foreground="Black"
                                   FontFamily="Montserrat"/>
                         <TextBox Text="{Binding EditingStudent.Year}"
                                  Style="{StaticResource {x:Type TextBox}}"/>
 
                         <TextBlock Text="Semester:" 
-                                  Foreground="White"
+                                  Foreground="Black"
                                   FontFamily="Montserrat"/>
                         <TextBox Text="{Binding EditingStudent.Semester}"
                                  Style="{StaticResource {x:Type TextBox}}"/>
 
                         <TextBlock Text="Phone:" 
-                                  Foreground="White"
+                                  Foreground="Black"
                                   FontFamily="Montserrat"/>
                         <TextBox Text="{Binding EditingStudent.Phone}"
                                  Style="{StaticResource {x:Type TextBox}}"/>
 
                         <TextBlock Text="Address:" 
-                                  Foreground="White"
+                                  Foreground="Black"
                                   FontFamily="Montserrat"/>
                         <TextBox Text="{Binding EditingStudent.Address}"
                                  Style="{StaticResource {x:Type TextBox}}"/>

@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\L E N O V O\source\repos\Student_Management\App.xaml
-131926697775
+151698392963
 
-32-547780879
-225212354789
-CustomControls\BindablePasswordControl.xaml;Style\ButtonStyles.xaml;Style\DataGridStyles.xaml;Style\TextBoxStyles.xaml;Style\UIColours.xaml;View\AttendanceDetailView.xaml;View\AttendanceView.xaml;View\CustomCalendar.xaml;View\HomeView.xaml;View\LoginView.xaml;View\MainView.xaml;View\SettingsView.xaml;View\StudentsView.xaml;
+36-1989433750
+225-1577548296
+CustomControls\BindablePasswordControl.xaml;Style\ButtonStyles.xaml;Style\ComboBoxStyles.xaml;Style\DataGridStyles.xaml;Style\TextBoxStyles.xaml;Style\UIColours.xaml;View\AttendanceDetailView.xaml;View\AttendanceView.xaml;View\CustomCalendar.xaml;View\HomeView.xaml;View\LoginView.xaml;View\MainView.xaml;View\MarksView.xaml;View\SettingsView.xaml;View\StudentsView.xaml;
 
 False
 

@@ -74,6 +74,8 @@ namespace Student_Management.ViewModel
         public ICommand ShowStudentViewCommand { get; }
         public ICommand ShowAttendanceViewCommand { get; }
         public ICommand ShowSettingsViewCommand { get; }
+        public ICommand ShowMarksViewCommand { get; }
+        public ICommand SignOutCommand { get; }
 
         public MainViewModel()
         {
@@ -84,6 +86,8 @@ namespace Student_Management.ViewModel
             ShowStudentViewCommand = new ViewModelCommand(ExecuteShowStudentViewCommand);
             ShowAttendanceViewCommand = new ViewModelCommand(ExecuteShowAttendanceViewCommand);
             ShowSettingsViewCommand = new ViewModelCommand(ExecuteShowSettingsViewCommand);
+            ShowMarksViewCommand = new ViewModelCommand(ExecuteShowMarksViewCommand);
+            SignOutCommand = new RelayCommand(SignOut);
             //Default View
             ExecuteShowHomeViewCommand(null);
             LoadCurrentUserData();
@@ -112,10 +116,17 @@ namespace Student_Management.ViewModel
         private void ExecuteShowSettingsViewCommand(object obj)
         {
             CurrentChildView = new SettingsViewModel() as ViewModelBase;
-            Caption = "Settings";
-            Icon = IconChar.Gear;
+            Caption = "Academic";
+            Icon = IconChar.BookBookmark;
         }
-        
+
+        private void ExecuteShowMarksViewCommand(object obj)
+        {
+            CurrentChildView = new MarksViewModel() as ViewModelBase;
+            Caption = "Marks";
+            Icon = IconChar.Marker;
+        }
+
         private void LoadCurrentUserData()
         {
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
@@ -131,6 +142,18 @@ namespace Student_Management.ViewModel
             {
                 CurrentUserAccount.DisplayName = "Invaild User, not Logged In";
             }
+        }
+
+        private void SignOut()
+        {
+            // Logic to clear user session data if needed
+
+            // Create a new instance of LoginView
+            var loginView = new LoginView();
+            loginView.Show(); // Show the login window
+
+            // Close the current main window
+            Application.Current.MainWindow.Close();
         }
     }
 }

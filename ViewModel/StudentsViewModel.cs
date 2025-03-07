@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Student_Management.ViewModel
 {
@@ -21,6 +22,8 @@ namespace Student_Management.ViewModel
         private StudentModel _editingStudent;
         private bool _isEditMode;
         private string _searchText;
+        private string _selectedYear;
+        private string _selectedSemester;
         private ICommand _editCommand;
         private ICommand _cancelCommand;
         private ICommand _addCommand;
@@ -28,12 +31,6 @@ namespace Student_Management.ViewModel
         private ICommand _deleteCommand;
         private ICommand _saveCommand;
         private ICommand _uploadImageCommand;
-
-        public StudentsViewModel()
-        {
-            _repository = new StudentRepository();
-            LoadStudents();
-        }
 
         public ObservableCollection<StudentModel> Students
         {
@@ -95,6 +92,31 @@ namespace Student_Management.ViewModel
             }
         }
 
+        public string SelectedYear
+        {
+            get => _selectedYear;
+            set
+            {
+                _selectedYear = value;
+                OnPropertyChanged(nameof(SelectedYear));
+                FilterStudents();
+            }
+        }
+
+        public string SelectedSemester
+        {
+            get => _selectedSemester;
+            set
+            {
+                _selectedSemester = value;
+                OnPropertyChanged(nameof(SelectedSemester));
+                FilterStudents();
+            }
+        }
+
+        public ObservableCollection<string> YearOptions { get; private set; }
+        public ObservableCollection<string> SemesterOptions { get; private set; }
+
         public ICommand EditCommand => _editCommand ??= new RelayCommand(ExecuteEditCommand);
         public ICommand CancelCommand => _cancelCommand ??= new RelayCommand(CancelEdit);
         public ICommand AddCommand => _addCommand ??= new RelayCommand(StartAdd);
@@ -102,6 +124,29 @@ namespace Student_Management.ViewModel
         public ICommand DeleteCommand => _deleteCommand ??= new RelayCommand(DeleteStudent, () => SelectedStudent != null);
         public ICommand SaveCommand => _saveCommand ??= new RelayCommand(SaveStudent);
         public ICommand UploadImageCommand => _uploadImageCommand ??= new RelayCommand(UploadImage);
+
+        public StudentsViewModel()
+        {
+            _repository = new StudentRepository();
+            
+            // Initialize Year options with "All" and the values from repository
+            YearOptions = new ObservableCollection<string>();
+            YearOptions.Add("All");
+            foreach (var year in _repository.GetAllYears())
+            {
+                YearOptions.Add(year);
+            }
+
+            // Initialize Semester options with "All" and the values from repository
+            SemesterOptions = new ObservableCollection<string>();
+            SemesterOptions.Add("All");
+            foreach (var semester in _repository.GetAllSemesters())
+            {
+                SemesterOptions.Add(semester);
+            }
+            
+            LoadStudents();
+        }
 
         private void ExecuteEditCommand()
         {
@@ -133,26 +178,63 @@ namespace Student_Management.ViewModel
 
         private void LoadStudents()
         {
-            _allStudents = _repository.GetAllStudents();
-            foreach (var student in _allStudents)
+            try
             {
-                LoadProfileImage(student);
+                _allStudents = _repository.GetAllStudents();
+                foreach (var student in _allStudents)
+                {
+                    LoadProfileImage(student);
+                }
+                FilterStudents();
             }
-            FilterStudents();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading students: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void FilterStudents()
         {
-            if (string.IsNullOrWhiteSpace(SearchText))
+            IEnumerable<StudentModel> filteredStudents = _allStudents;
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                Students = new ObservableCollection<StudentModel>(_allStudents);
+                filteredStudents = filteredStudents.Where(s => 
+                    s.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                    s.RollNo.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
             }
-            else
+
+            // Only filter by year if not "All"
+            if (!string.IsNullOrWhiteSpace(SelectedYear) && SelectedYear != "All")
             {
-                Students = new ObservableCollection<StudentModel>(
-                    _allStudents.Where(s => s.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
-                );
+                int yearNumber;
+                switch (SelectedYear)
+                {
+                    case "First Year": yearNumber = 1; break;
+                    case "Second Year": yearNumber = 2; break;
+                    case "Third Year": yearNumber = 3; break;
+                    case "Fourth Year": yearNumber = 4; break;
+                    case "First Year (Honors)": yearNumber = 5; break;
+                    case "Second Year (Honors)": yearNumber = 6; break;
+                    case "Third Year (Honors)": yearNumber = 7; break;
+                    case "Fourth Year (Honors)": yearNumber = 8; break;
+                    default: yearNumber = 0; break;
+                }
+
+                filteredStudents = filteredStudents.Where(s => 
+                    int.TryParse(s.Year, out int studentYear) && studentYear == yearNumber);
             }
+
+            // Only filter by semester if not "All"
+            if (!string.IsNullOrWhiteSpace(SelectedSemester) && SelectedSemester != "All")
+            {
+                int semesterNumber = SelectedSemester.StartsWith("First") ? 1 : 2;
+                
+                filteredStudents = filteredStudents.Where(s => 
+                    int.TryParse(s.Semester, out int studentSemester) && studentSemester == semesterNumber);
+            }
+
+            Students = new ObservableCollection<StudentModel>(filteredStudents);
         }
 
         private void ClearSearch()
@@ -254,7 +336,7 @@ namespace Student_Management.ViewModel
         {
             var openFileDialog = new OpenFileDialog
             {
-                Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png",
+                Filter = "Image files (*.jpg, `*.jpeg, *.png) | *.jpg; *.jpeg; *.png",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
             };
 

@@ -20,5 +20,6 @@ namespace Student_Management.View
         {
             InitializeComponent();
         }
+
     }
 }

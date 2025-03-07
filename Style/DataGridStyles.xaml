@@ -2,22 +2,22 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="DataGrid" x:Key="CustomDataGridStyle">
-        <Setter Property="Background" Value="#200F53"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Foreground" Value="#212529"/>
         <Setter Property="GridLinesVisibility" Value="All"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
-        <Setter Property="RowBackground" Value="#2A2A2A"/>
-        <Setter Property="AlternatingRowBackground" Value="#252525"/>
+        <Setter Property="RowBackground" Value="#FFFFFF"/>
+        <Setter Property="AlternatingRowBackground" Value="#F8F9FA"/>
     </Style>
 
     <Style TargetType="DataGridCell" x:Key="CustomDataGridCellStyle">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#212529"/>
         <Setter Property="FontFamily" Value="Monterrat"/>
-        <Setter Property="Background" Value="#2A2A2A"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="#444"/>
+        <Setter Property="BorderBrush" Value="#DEE2E6"/>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="#773DFF"/>
@@ -27,7 +27,18 @@
     </Style>
 
     <Style TargetType="TextBlock" x:Key="CustomTextBlockStyle">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="#212529"/>
         <Setter Property="FontFamily" Value="Monterrat"/>
+        <Setter Property="Background" Value="#773DFF"/>
     </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="#F8F9FA"/>
+        <Setter Property="Foreground" Value="#212529"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="BorderBrush" Value="#DEE2E6"/>
+        <Setter Property="Height" Value="30"/>
+    </Style>
+  
 </ResourceDictionary>

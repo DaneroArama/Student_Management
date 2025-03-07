@@ -19,39 +19,13 @@
 
     <Grid>
         <StackPanel>
-            <TextBlock Text="Select Date:" FontSize="16" Margin="10"/>
+            <TextBlock Text="Select Date:" Foreground="White" FontSize="16" Margin="10"/>
             <DatePicker x:Name="DatePicker" Margin="10"/>
             <Button Content="Confirm" Click="ConfirmButton_Click" Margin="10" Style="{StaticResource RoundedButtonStyle}"/>
             <local:CustomCalendar x:Name="CustomCalendarControl" SelectedDate="{Binding SelectedDate, Mode=TwoWay}" Height="300"/>
         </StackPanel>
         
         <!-- ContentControl to display AttendanceDetailView -->
-        <ContentControl x:Name="ContentControl" Grid.Row="1" Margin="10" />
-
-        <!-- Pop-up for Attendance Details -->
-        <Popup x:Name="AttendancePopup" StaysOpen="False" Placement="Mouse">
-            <Border Background="White" Padding="10" BorderBrush="Gray" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="Attendance Details" FontWeight="Bold" FontSize="16"/>
-                    <ListBox ItemsSource="{Binding AttendanceRecords}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding StudentID}" Margin="5"/>
-                                    <ComboBox SelectedItem="{Binding Status}" Width="100">
-                                        <ComboBoxItem Content="Present"/>
-                                        <ComboBoxItem Content="Absent"/>
-                                        <ComboBoxItem Content="Excused"/>
-                                    </ComboBox>
-                                    <TextBox Text="{Binding Remarks}" Width="100" Margin="5"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button Command="{Binding SaveChangesCommand}" Content="Save Changes" Margin="5"/>
-                    <Button Content="Close" Click="ClosePopup_Click" Margin="5"/>
-                </StackPanel>
-            </Border>
-        </Popup>
+        <ContentControl x:Name="ContentControl" Margin="1" Foreground="white"/>
     </Grid>
 </UserControl>

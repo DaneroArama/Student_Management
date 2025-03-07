@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Student_Management.Model;
 using System.ComponentModel;
+using System.Linq;
+using Student_Management.Repository;
 
 namespace Student_Management.ViewModel
 {
@@ -12,6 +14,11 @@ namespace Student_Management.ViewModel
         private AttendanceModel _selectedAttendance;
         private ObservableCollection<DateTime> _holidays;
         private DateTime _selectedDate;
+        private ObservableCollection<ClassModel> _classes;
+        private string _selectedYear;
+        private string _selectedSemester;
+        private ClassModel _selectedClass;
+        private readonly StudentRepository _repository;
 
         public ObservableCollection<AttendanceModel> AttendanceRecords
         {
@@ -54,6 +61,49 @@ namespace Student_Management.ViewModel
             }
         }
 
+        public ObservableCollection<ClassModel> Classes
+        {
+            get => _classes;
+            set
+            {
+                _classes = value;
+                OnPropertyChanged(nameof(Classes));
+            }
+        }
+
+        public string SelectedYear
+        {
+            get => _selectedYear;
+            set
+            {
+                _selectedYear = value;
+                OnPropertyChanged(nameof(SelectedYear));
+                LoadClassesForYearAndSemester(); // Reload classes when year changes
+            }
+        }
+
+        public string SelectedSemester
+        {
+            get => _selectedSemester;
+            set
+            {
+                _selectedSemester = value;
+                OnPropertyChanged(nameof(SelectedSemester));
+                LoadClassesForYearAndSemester(); // Reload classes when semester changes
+            }
+        }
+
+        public ClassModel SelectedClass
+        {
+            get => _selectedClass;
+            set
+            {
+                _selectedClass = value;
+                OnPropertyChanged(nameof(SelectedClass));
+                // Load students or perform other actions when class is selected
+            }
+        }
+
         public ICommand MarkAttendanceCommand { get; }
         public ICommand SaveChangesCommand { get; }
 
@@ -66,6 +116,19 @@ namespace Student_Management.ViewModel
 
         public AttendanceViewModel()
         {
+            _repository = new StudentRepository();
+            Classes = new ObservableCollection<ClassModel>();
+            
+            // Initialize with default values if needed
+            SelectedYear = "First Year";
+            SelectedSemester = "First Semester";
+            
+            // Initial load of classes
+            LoadClassesForYearAndSemester();
+            
+            // Initialize with today's date
+            SelectedDate = DateTime.Today;
+            
             AttendanceRecords = new ObservableCollection<AttendanceModel>();
             Holidays = new ObservableCollection<DateTime>();
             MarkAttendanceCommand = new RelayCommand(MarkAttendance);
@@ -98,6 +161,20 @@ namespace Student_Management.ViewModel
             else
             {
                 Holidays.Add(date);
+            }
+        }
+
+        private void LoadClassesForYearAndSemester()
+        {
+            if (string.IsNullOrEmpty(SelectedYear) || string.IsNullOrEmpty(SelectedSemester))
+                return;
+
+            Classes = _repository.GetClassesByYearAndSemester(SelectedYear, SelectedSemester);
+            
+            // If no class is selected or the previously selected class isn't in the new list
+            if (Classes.Count > 0 && (SelectedClass == null || !Classes.Contains(SelectedClass)))
+            {
+                SelectedClass = Classes.FirstOrDefault();
             }
         }
     }
