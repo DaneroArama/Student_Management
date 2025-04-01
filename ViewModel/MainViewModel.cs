@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using FontAwesome.Sharp;
@@ -15,53 +12,44 @@ namespace Student_Management.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private UserAccountModel _currentUserAccount;
-
         private ViewModelBase _currentChildView;
-
         private string _caption;
-
         private IconChar _icon;
-        
-        private IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
         public UserAccountModel CurrentUserAccount
         {
             get => _currentUserAccount;
             set
             {
-                if (_currentUserAccount != value)
-                {
-                    _currentUserAccount = value;
-                    OnPropertyChanged(nameof(CurrentUserAccount));
-                }
+                _currentUserAccount = value;
+                OnPropertyChanged(nameof(CurrentUserAccount));
             }
         }
-        //Properties
-        public ViewModelBase CurrentChildView 
-        { 
-            get => _currentChildView;
 
+        public ViewModelBase CurrentChildView
+        {
+            get => _currentChildView;
             set
             {
                 _currentChildView = value;
                 OnPropertyChanged(nameof(CurrentChildView));
             }
         }
-        public string Caption 
-        { 
-            get => _caption;
 
+        public string Caption
+        {
+            get => _caption;
             set
             {
                 _caption = value;
                 OnPropertyChanged(nameof(Caption));
             }
-
         }
-        public IconChar Icon 
-        { 
-            get => _icon;
 
+        public IconChar Icon
+        {
+            get => _icon;
             set
             {
                 _icon = value;
@@ -69,7 +57,7 @@ namespace Student_Management.ViewModel
             }
         }
 
-        //-->Commands
+        // Commands
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowStudentViewCommand { get; }
         public ICommand ShowAttendanceViewCommand { get; }
@@ -79,81 +67,136 @@ namespace Student_Management.ViewModel
 
         public MainViewModel()
         {
-            _userRepository = new UserRepository();
-            CurrentUserAccount = new UserAccountModel();
-            //Initialize Commands
-            ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
-            ShowStudentViewCommand = new ViewModelCommand(ExecuteShowStudentViewCommand);
-            ShowAttendanceViewCommand = new ViewModelCommand(ExecuteShowAttendanceViewCommand);
-            ShowSettingsViewCommand = new ViewModelCommand(ExecuteShowSettingsViewCommand);
-            ShowMarksViewCommand = new ViewModelCommand(ExecuteShowMarksViewCommand);
-            SignOutCommand = new RelayCommand(SignOut);
-            //Default View
-            ExecuteShowHomeViewCommand(null);
-            LoadCurrentUserData();
+            try
+            {
+                _userRepository = new UserRepository();
+                CurrentUserAccount = new UserAccountModel();
+
+                // Initialize Commands
+                ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
+                ShowStudentViewCommand = new ViewModelCommand(ExecuteShowStudentViewCommand);
+                ShowAttendanceViewCommand = new ViewModelCommand(ExecuteShowAttendanceViewCommand);
+                ShowSettingsViewCommand = new ViewModelCommand(ExecuteShowSettingsViewCommand);
+                ShowMarksViewCommand = new ViewModelCommand(ExecuteShowMarksViewCommand);
+                SignOutCommand = new RelayCommand(SignOut);
+
+                // Default View
+                ExecuteShowHomeViewCommand(null);
+                LoadCurrentUserData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing MainViewModel: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
         private void ExecuteShowHomeViewCommand(object obj)
         {
-            CurrentChildView = new HomeViewModel();
-            Caption = "Dashboard";
-            Icon = IconChar.Home;
+            try
+            {
+                CurrentChildView = new HomeViewModel();
+                Caption = "Dashboard";
+                Icon = IconChar.Home;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Home view: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExecuteShowStudentViewCommand(object obj)
         {
-            CurrentChildView = new StudentsViewModel();
-            Caption = "Students";
-            Icon = IconChar.UserGraduate;
+            try
+            {
+                CurrentChildView = new StudentsViewModel();
+                Caption = "Students";
+                Icon = IconChar.UserGraduate;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Students view: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExecuteShowAttendanceViewCommand(object obj)
         {
-            CurrentChildView = new AttendanceViewModel();
-            Caption = "Attendance";
-            Icon = IconChar.CalendarCheck;
+            try
+            {
+                CurrentChildView = new AttendanceViewModel();
+                Caption = "Attendance";
+                Icon = IconChar.CalendarCheck;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Attendance view: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExecuteShowSettingsViewCommand(object obj)
         {
-            CurrentChildView = new SettingsViewModel() as ViewModelBase;
-            Caption = "Academic";
-            Icon = IconChar.BookBookmark;
+            try
+            {
+                CurrentChildView = new AcademicEditViewModel();
+                Caption = "Academic";
+                Icon = IconChar.BookBookmark;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Academic view: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExecuteShowMarksViewCommand(object obj)
         {
-            CurrentChildView = new MarksViewModel() as ViewModelBase;
-            Caption = "Marks";
-            Icon = IconChar.Marker;
+            try
+            {
+                CurrentChildView = new MarksViewModel();
+                Caption = "Marks";
+                Icon = IconChar.Marker;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Marks view: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadCurrentUserData()
         {
-            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-            if (user != null)
+            try
             {
-
-                CurrentUserAccount.Username = user.Username;
-                    CurrentUserAccount.DisplayName = $"Welcome, {user.Username}";
-                    CurrentUserAccount.ProfilePicture = 0; // Default value for byte
-
+                if (Thread.CurrentPrincipal?.Identity?.Name != null)
+                {
+                    var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+                    if (user != null)
+                    {
+                        CurrentUserAccount.Username = user.Username;
+                        CurrentUserAccount.DisplayName = $"Welcome, {user.Username}";
+                        CurrentUserAccount.ProfilePicture = 0;
+                    }
+                    else
+                    {
+                        CurrentUserAccount.DisplayName = "Invalid User, not Logged In";
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CurrentUserAccount.DisplayName = "Invaild User, not Logged In";
+                MessageBox.Show($"Error loading user data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void SignOut()
         {
-            // Logic to clear user session data if needed
-
-            // Create a new instance of LoginView
-            var loginView = new LoginView();
-            loginView.Show(); // Show the login window
-
-            // Close the current main window
-            Application.Current.MainWindow.Close();
+            try
+            {
+                var loginView = new LoginView();
+                loginView.Show();
+                Application.Current.MainWindow.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during sign out: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

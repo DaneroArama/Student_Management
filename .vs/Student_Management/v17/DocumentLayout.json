@@ -3,24 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\studentsview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\studentsview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\mainview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\mainview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\settingsview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\settingsview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\settingsview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\settingsview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\attendancedetailview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\attendancedetailview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\attendancedetailview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\attendancedetailview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\viewmodel\\studentsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:viewmodel\\studentsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\model\\studentmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:model\\studentmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\model\\useraccountmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:model\\useraccountmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\view\\editstudentview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:view\\editstudentview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|c:\\users\\l e n o v o\\source\\repos\\student_management\\viewmodel\\editstudentviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7BCE57F-A17C-4022-9DA0-160049313CD1}|Student_Management.csproj|solutionrelative:viewmodel\\editstudentviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,61 +47,96 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "StudentsView.xaml",
+              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\StudentsView.xaml",
+              "RelativeDocumentMoniker": "View\\StudentsView.xaml",
+              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\StudentsView.xaml",
+              "RelativeToolTip": "View\\StudentsView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-03-31T14:20:24.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "MainView.xaml",
               "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\MainView.xaml",
               "RelativeDocumentMoniker": "View\\MainView.xaml",
               "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\MainView.xaml",
               "RelativeToolTip": "View\\MainView.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-03-07T05:27:53.136Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-31T10:21:54.047Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "SettingsView.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\SettingsView.xaml.cs",
-              "RelativeDocumentMoniker": "View\\SettingsView.xaml.cs",
-              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\SettingsView.xaml.cs",
-              "RelativeToolTip": "View\\SettingsView.xaml.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAApwBYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-06T15:38:34.746Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SettingsView.xaml",
-              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\SettingsView.xaml",
-              "RelativeDocumentMoniker": "View\\SettingsView.xaml",
-              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\SettingsView.xaml",
-              "RelativeToolTip": "View\\SettingsView.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-03-06T15:38:12.692Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AttendanceDetailView.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\AttendanceDetailView.xaml.cs",
-              "RelativeDocumentMoniker": "View\\AttendanceDetailView.xaml.cs",
-              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\AttendanceDetailView.xaml.cs",
-              "RelativeToolTip": "View\\AttendanceDetailView.xaml.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAApwBoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-06T15:28:44.548Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "AttendanceDetailView.xaml",
               "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\AttendanceDetailView.xaml",
               "RelativeDocumentMoniker": "View\\AttendanceDetailView.xaml",
               "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\AttendanceDetailView.xaml",
               "RelativeToolTip": "View\\AttendanceDetailView.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-03-06T10:19:43.048Z"
+              "WhenOpened": "2025-03-31T10:21:24.383Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "StudentsViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\ViewModel\\StudentsViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModel\\StudentsViewModel.cs",
+              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\ViewModel\\StudentsViewModel.cs",
+              "RelativeToolTip": "ViewModel\\StudentsViewModel.cs",
+              "ViewState": "AgIAAGQCAAAAAAAAAAAkwHMCAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T09:44:56.85Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserAccountModel.cs",
+              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\Model\\UserAccountModel.cs",
+              "RelativeDocumentMoniker": "Model\\UserAccountModel.cs",
+              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\Model\\UserAccountModel.cs",
+              "RelativeToolTip": "Model\\UserAccountModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T03:20:53.688Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "StudentModel.cs",
+              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\Model\\StudentModel.cs",
+              "RelativeDocumentMoniker": "Model\\StudentModel.cs",
+              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\Model\\StudentModel.cs",
+              "RelativeToolTip": "Model\\StudentModel.cs",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAEwKcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-20T08:05:25.741Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "EditStudentView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\EditStudentView.xaml.cs",
+              "RelativeDocumentMoniker": "View\\EditStudentView.xaml.cs",
+              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\View\\EditStudentView.xaml.cs",
+              "RelativeToolTip": "View\\EditStudentView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T08:30:00.567Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "EditStudentViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\ViewModel\\EditStudentViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModel\\EditStudentViewModel.cs",
+              "ToolTip": "C:\\Users\\L E N O V O\\source\\repos\\Student_Management\\ViewModel\\EditStudentViewModel.cs",
+              "RelativeToolTip": "ViewModel\\EditStudentViewModel.cs",
+              "ViewState": "AgIAAAABAAAAAAAAAAASwAwBAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T08:27:47.504Z"
             }
           ]
         }

@@ -1,49 +1,61 @@
-using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Student_Management.Model;
 
-public class YearConfig : INotifyPropertyChanged
+namespace Student_Management.Model
 {
-    private int _id;
-    private string _yearName;
-    private int _numberOfSemesters;
-
-    public int Id
+    public class YearConfig : INotifyPropertyChanged
     {
-        get => _id;
-        set
+        private int _yearId;
+        private string _yearLevel;
+        private string _yearType;
+        private int _numberOfSemesters;
+
+        public int YearId
         {
-            _id = value;
-            OnPropertyChanged(nameof(Id));
+            get => _yearId;
+            set
+            {
+                _yearId = value;
+                OnPropertyChanged(nameof(YearId));
+            }
         }
-    }
 
-    public string YearName
-    {
-        get => _yearName;
-        set
+        public string YearLevel
         {
-            _yearName = value;
-            OnPropertyChanged(nameof(YearName));
+            get => _yearLevel;
+            set
+            {
+                _yearLevel = value;
+                OnPropertyChanged(nameof(YearLevel));
+            }
         }
-    }
 
-    public int NumberOfSemesters
-    {
-        get => _numberOfSemesters;
-        set
+        public string YearType
         {
-            _numberOfSemesters = value;
-            OnPropertyChanged(nameof(NumberOfSemesters));
+            get => _yearType;
+            set
+            {
+                _yearType = value;
+                OnPropertyChanged(nameof(YearType));
+            }
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        public int NumberOfSemesters
+        {
+            get => _numberOfSemesters;
+            set
+            {
+                _numberOfSemesters = value;
+                OnPropertyChanged(nameof(NumberOfSemesters));
+            }
+        }
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public string DisplayName => $"{YearLevel} ({YearType})";
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 } 

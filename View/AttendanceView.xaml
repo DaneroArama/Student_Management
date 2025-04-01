@@ -1,31 +1,342 @@
-﻿<UserControl x:Class="Student_Management.View.AttendanceView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:viewModel="clr-namespace:Student_Management.ViewModel"
-             xmlns:local="clr-namespace:Student_Management.View"
-             x:Name="AttendanceViewControl">
-    <UserControl.DataContext>
-        <viewModel:AttendanceViewModel/>
-    </UserControl.DataContext>
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="Student_Management.View.AttendanceView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+			 xmlns:viewModel="clr-namespace:Student_Management.ViewModel"
+			 xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+			 mc:Ignorable="d" 
+			 d:DesignHeight="650" d:DesignWidth="900">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Style/TextBoxStyles.xaml"/>
-                <ResourceDictionary Source="../Style/ButtonStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
+	<UserControl.DataContext>
+		<viewModel:AttendanceViewModel/>
+	</UserControl.DataContext>
 
-    <Grid>
-        <StackPanel>
-            <TextBlock Text="Select Date:" Foreground="White" FontSize="16" Margin="10"/>
-            <DatePicker x:Name="DatePicker" Margin="10"/>
-            <Button Content="Confirm" Click="ConfirmButton_Click" Margin="10" Style="{StaticResource RoundedButtonStyle}"/>
-            <local:CustomCalendar x:Name="CustomCalendarControl" SelectedDate="{Binding SelectedDate, Mode=TwoWay}" Height="300"/>
-        </StackPanel>
-        
-        <!-- ContentControl to display AttendanceDetailView -->
-        <ContentControl x:Name="ContentControl" Margin="1" Foreground="white"/>
-    </Grid>
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../Style/TextBoxStyles.xaml"/>
+				<ResourceDictionary Source="../Style/ComboBoxStyles.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<Grid Background="White">
+		<Grid x:Name="ListViewGrid" 
+			  Visibility="{Binding IsListVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+			<!-- Header section - Add academic year selector -->
+			<Grid Grid.Row="0" Margin="30,20">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="255*"/>
+					<ColumnDefinition Width="190*"/>
+					<ColumnDefinition Width="193*"/>
+					<ColumnDefinition Width="202*"/>
+				</Grid.ColumnDefinitions>
+
+				<!-- Title -->
+				<StackPanel Grid.Column="0">
+					<TextBlock Text="Attendance Dashboard"
+						 FontSize="24"
+						 FontWeight="SemiBold"
+						 Foreground="#333333"/>
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<TextBlock Text="Academic Year: "
+								 FontSize="14"
+								 Foreground="#666666"/>
+						<TextBlock Text="{Binding CurrentAcademicYear}"
+								 FontSize="14"
+								 Foreground="#666666"
+								 FontWeight="SemiBold"/>
+					</StackPanel>
+				</StackPanel>
+
+				<!-- Take Attendance Button -->
+				<Button Grid.Column="1"
+					Content="Take Attendance"
+					Command="{Binding TakeAttendanceCommand}"
+					Background="#8A2BE2"
+					Foreground="White"
+					FontWeight="SemiBold"
+					BorderThickness="0"
+					Style="{StaticResource RoundedButtonStyle}">
+				</Button>
+				
+				<!-- Add Academic Year Settings Button -->
+				<Button Grid.Column="2"
+						Content="Academic Settings"
+						Command="{Binding AcademicSettingsCommand}"
+						Background="#2196F3"
+						Foreground="White"
+						FontWeight="SemiBold"
+						BorderThickness="0"
+						Style="{StaticResource RoundedButtonStyle}">
+				</Button>
+				
+				<!-- Add Holiday Management Button -->
+				<Button Grid.Column="3"
+						Content="Manage Holidays"
+						Command="{Binding ManageHolidaysCommand}"
+						Background="#FF9800"
+						Foreground="White"
+						FontWeight="SemiBold"
+						BorderThickness="0"
+						Style="{StaticResource RoundedButtonStyle}">
+				</Button>
+			</Grid>
+
+			<!-- Statistics Cards - Update with dynamic data -->
+			<Grid Grid.Row="1" Margin="20,0,20,20">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<!-- Present Card -->
+				<Border Grid.Column="0"
+					Background="White"
+					BorderThickness="1"
+					BorderBrush="#E0E0E0"
+					CornerRadius="10"
+					Margin="10">
+					<Grid Margin="20,15">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<fa:IconImage Grid.Row="0"
+								Icon="UserCheck"
+								Height="24"
+								Width="24"
+								Foreground="#00C853"/>
+
+						<TextBlock Grid.Row="1"
+							 Text="{Binding PresentPercentage, StringFormat={}{0}%}"
+							 FontSize="36"
+							 FontWeight="Bold"
+							 Foreground="#00C853"
+							 Margin="0,10"/>
+
+						<StackPanel Grid.Row="2" 
+							  Orientation="Vertical">
+							<TextBlock Text="Present"
+								 FontSize="16"
+								 FontWeight="SemiBold"
+								 Foreground="#333333"/>
+							<TextBlock FontSize="14"
+								 Foreground="#666666"
+								 Margin="0,5,0,0">
+								<Run Text="Students: "/>
+								<Run Text="{Binding PresentStudents}"/>
+								<Run Text=" of "/>
+								<Run Text="{Binding TotalStudents}"/>
+							</TextBlock>
+						</StackPanel>
+					</Grid>
+				</Border>
+
+				<!-- Absent Card -->
+				<Border Grid.Column="1"
+					Background="White"
+					BorderThickness="1"
+					BorderBrush="#E0E0E0"
+					CornerRadius="10"
+					Margin="10">
+					<Grid Margin="20,15">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<fa:IconImage Grid.Row="0"
+								Icon="UserXmark"
+								Height="24"
+								Width="24"
+								Foreground="#FF5252"/>
+
+						<TextBlock Grid.Row="1"
+							 Text="{Binding AbsentPercentage, StringFormat={}{0}%}"
+							 FontSize="36"
+							 FontWeight="Bold"
+							 Foreground="#FF5252"
+							 Margin="0,10"/>
+
+						<StackPanel Grid.Row="2" 
+							  Orientation="Vertical">
+							<TextBlock Text="Absent"
+								 FontSize="16"
+								 FontWeight="SemiBold"
+								 Foreground="#333333"/>
+							<TextBlock FontSize="14"
+								 Foreground="#666666"
+								 Margin="0,5,0,0">
+								<Run Text="Students: "/>
+								<Run Text="{Binding AbsentStudents}"/>
+								<Run Text=" of "/>
+								<Run Text="{Binding TotalStudents}"/>
+							</TextBlock>
+						</StackPanel>
+					</Grid>
+				</Border>
+
+				<!-- Academic Days Card -->
+				<Border Grid.Column="2"
+					Background="White"
+					BorderThickness="1"
+					BorderBrush="#E0E0E0"
+					CornerRadius="10"
+					Margin="10">
+					<Grid Margin="20,15">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<fa:IconImage Grid.Row="0"
+								Icon="CalendarDays"
+								Height="24"
+								Width="24"
+								Foreground="#2196F3"/>
+
+						<TextBlock Grid.Row="1"
+							 Text="{Binding TotalAcademicDays}"
+							 FontSize="36"
+							 FontWeight="Bold"
+							 Foreground="#2196F3"
+							 Margin="0,10"/>
+
+						<StackPanel Grid.Row="2" 
+							  Orientation="Vertical">
+							<TextBlock Text="Academic Days"
+								 FontSize="16"
+								 FontWeight="SemiBold"
+								 Foreground="#333333"/>
+							<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+								<TextBlock Text="{Binding AcademicStartDate, StringFormat='{}{0:MMM dd}'}"
+										 FontSize="14"
+										 Foreground="#666666"/>
+								<TextBlock Text=" - "
+										 FontSize="14"
+										 Foreground="#666666"/>
+								<TextBlock Text="{Binding AcademicEndDate, StringFormat='{}{0:MMM dd, yyyy}'}"
+										 FontSize="14"
+										 Foreground="#666666"/>
+							</StackPanel>
+						</StackPanel>
+					</Grid>
+				</Border>
+			</Grid>
+
+			<!-- Chart Section - Add period selector -->
+			<Grid Grid.Row="2" Margin="30,0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<!-- Chart Header with Period Selector -->
+				<Grid Grid.Row="0" Margin="0,0,0,10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					
+					<TextBlock Grid.Column="0"
+							 Text="Attendance Overview"
+							 FontSize="18"
+							 FontWeight="SemiBold"
+							 Foreground="#333333"/>
+							 
+					<ComboBox Grid.Column="1"
+							  Width="150"
+							  Height="35"
+							  ItemsSource="{Binding ChartPeriods}"
+							  SelectedItem="{Binding SelectedChartPeriod}"
+							  Style="{StaticResource ComboBoxStyles}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+
+				<Border Grid.Row="1"
+					Background="White"
+					BorderThickness="1"
+					BorderBrush="#E0E0E0"
+					CornerRadius="10"
+					Padding="20">
+					<lvc:CartesianChart Series="{Binding SeriesCollection}"
+							      LegendLocation="Right">
+						<lvc:CartesianChart.AxisX>
+							<lvc:Axis Title="{Binding ChartXAxisTitle}"
+								Labels="{Binding Labels}"
+								Foreground="#333333"/>
+						</lvc:CartesianChart.AxisX>
+						<lvc:CartesianChart.AxisY>
+							<lvc:Axis Title="Attendance (%)"
+								Foreground="#333333"/>
+						</lvc:CartesianChart.AxisY>
+					</lvc:CartesianChart>
+				</Border>
+			</Grid>
+
+			<!-- Recent Attendance Section - Update header -->
+			<Grid Grid.Row="3" Margin="30,20">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<!-- Header -->
+				<Grid Grid.Row="0" Margin="0,0,0,15">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+
+					<TextBlock Grid.Column="0"
+						 Text="Recent Attendance Records"
+						 FontSize="18"
+						 FontWeight="SemiBold"
+						 Foreground="#333333"/>
+						 
+					<Button Grid.Column="1"
+							Content="View All"
+							Command="{Binding ViewAllAttendanceCommand}"
+							Width="100"
+							Height="35"
+							Background="#8A2BE2"
+							Foreground="White"
+							BorderThickness="0">
+						<Button.Resources>
+							<Style TargetType="Border">
+								<Setter Property="CornerRadius" Value="8"/>
+							</Style>
+						</Button.Resources>
+					</Button>
+				</Grid>
+
+				<!-- Recent Attendance Table - Keep as is -->
+			</Grid>
+		</Grid>
+		<!-- Detail View -->
+		<ContentControl Content="{Binding EditContent}"
+					   Visibility="{Binding IsEditVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+	</Grid>
 </UserControl>

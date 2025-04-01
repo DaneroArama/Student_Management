@@ -8,7 +8,11 @@ namespace Student_Management.Model
         public int StudentID { get; set; }
         public int ClassID { get; set; }
         public DateTime AttendanceDate { get; set; }
-        public string Status { get; set; } // 'Present', 'Absent', 'Excused'
+        public string Status { get; set; }
         public string Remarks { get; set; }
+        
+        // Additional properties for display purposes
+        public string StudentName { get; set; }
+        public string ClassName { get; set; }
     }
-} 
+}

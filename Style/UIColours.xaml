@@ -37,6 +37,11 @@
     <SolidColorBrush x:Key="panelColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="panelOverColor" Color="#F8F9FA"/>
     <SolidColorBrush x:Key="panelActiveColor" Color="#E9ECEF"/>
+    
+    <!-- Additional Panel Brushes -->
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#F8F9FA"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#DEE2E6"/>
 
     <!--Button Colors-->
     <!--TextBox Colors-->

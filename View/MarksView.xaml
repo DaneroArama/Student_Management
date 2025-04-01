@@ -4,9 +4,344 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Student_Management.View"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:vm="clr-namespace:Student_Management.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="650" d:DesignWidth="1000"
+             Visibility="Visible">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Style/UIColours.xaml"/>
+                <ResourceDictionary Source="/Style/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="/Style/TextBoxStyles.xaml"/>
+                <ResourceDictionary Source="/Style/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="/Style/ComboBoxStyles.xaml"/>
+                <ResourceDictionary Source="/Style/TextStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource PanelBackgroundBrush}">
+        <TabControl Background="Transparent" BorderThickness="0">
+            <!-- Marks Entry Tab -->
+            <TabItem Header="Marks Entry" Style="{StaticResource TabItemStyle}">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Filters and Selection -->
+                    <GroupBox Header="Select Student and Class" Grid.Row="0" Margin="0,0,0,10" Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Year Selection -->
+                            <TextBlock Text="Year:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1" 
+                                    Margin="5"
+                                    ItemsSource="{Binding Years}"
+                                    SelectedItem="{Binding SelectedYear}"
+                                    Style="{StaticResource ComboBoxStyles}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding YearLevel}" />
+                                            <TextBlock Text=" - " />
+                                            <TextBlock Text="{Binding YearType}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <!-- Semester Selection -->
+                            <TextBlock Text="Semester:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="0" Grid.Column="3" 
+                                    Margin="5"
+                                    ItemsSource="{Binding Semesters}"
+                                    SelectedItem="{Binding SelectedSemester}"
+                                    Style="{StaticResource ComboBoxStyles}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StringFormat=Semester {0}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <!-- Class Selection -->
+                            <TextBlock Text="Class:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="1" Grid.Column="1" 
+                                    Margin="5" 
+                                    ItemsSource="{Binding Classes}"
+                                    SelectedItem="{Binding SelectedClass}"
+                                    Style="{StaticResource ComboBoxStyles}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ClassName}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <!-- Student Selection -->
+                            <TextBlock Text="Student:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="1" Grid.Column="3" 
+                                    Margin="5" 
+                                    ItemsSource="{Binding Students}"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id"
+                                    SelectedValue="{Binding SelectedStudentId}"
+                                    Style="{StaticResource ComboBoxStyles}"/>
+
+                            <!-- Exam Type Selection -->
+                            <TextBlock Text="Exam Type:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="2" Grid.Column="1" 
+                                    Margin="5"
+                                    ItemsSource="{Binding ExamTypes}"
+                                    SelectedItem="{Binding SelectedExamType}"
+                                    Style="{StaticResource ComboBoxStyles}"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Marks Entry Form -->
+                    <GroupBox Header="Enter Marks" Grid.Row="1" Margin="0,0,0,10" Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Marks Obtained:" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" 
+                                   Margin="5"
+                                   Text="{Binding MarksObtained, UpdateSourceTrigger=PropertyChanged}"
+                                   Style="{StaticResource TextBoxStyle}"/>
+
+                            <TextBlock Text="Total Marks:" Grid.Column="2" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="3" 
+                                   Margin="5,5,5,0"
+                                   Text="{Binding TotalMarks, UpdateSourceTrigger=PropertyChanged}" Height="53" VerticalAlignment="Top"/>
+
+                            <TextBlock Text="Exam Date:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Row="1" Grid.Column="1" 
+                                      Margin="5"
+                                      SelectedDate="{Binding ExamDate}"/>
+
+                            <TextBlock Text="Remarks:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="3" 
+                                   Margin="5"
+                                   Text="{Binding Remarks, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource TextBoxStyle}"/>
+
+                            <StackPanel Grid.Row="2" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                <Button Content="Save" 
+                                        Width="100" 
+                                        Margin="5"
+                                        Command="{Binding SaveCommand}"
+                                        Style="{StaticResource RoundedButtonStyle}"/>
+                                <Button Content="Clear" 
+                                        Width="100" 
+                                        Margin="5"
+                                        Command="{Binding ClearCommand}"
+                                        Style="{StaticResource RoundedButtonStyle}"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Marks DataGrid -->
+                    <GroupBox Header="Marks Records" Grid.Row="2" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock Text="Search:" VerticalAlignment="Center"/>
+                                <TextBox Width="200" 
+                                       Margin="5,0"
+                                       Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource TextBoxStyle}"/>
+                                <Button Content="Search" 
+                                        Width="80"
+                                        Command="{Binding SearchCommand}"
+                                        Style="{StaticResource RoundedButtonStyle}"/>
+                                <Button Content="Refresh" 
+                                        Width="80" 
+                                        Margin="5,0"
+                                        Command="{Binding RefreshCommand}"
+                                        Style="{StaticResource RoundedButtonStyle}"/>
+                            </StackPanel>
+
+                            <DataGrid Grid.Row="1" 
+                                    ItemsSource="{Binding MarksRecords}"
+                                    SelectedItem="{Binding SelectedMark}"
+                                    AutoGenerateColumns="False" 
+                                    IsReadOnly="True"
+                                    Style="{StaticResource CustomDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="RollNo" Binding="{Binding RollNo}"/>
+                                    <DataGridTextColumn Header="Student Name" Binding="{Binding StudentName}"/>
+                                    <DataGridTextColumn Header="Year" Binding="{Binding YearLevel}"/>
+                                    <DataGridTextColumn Header="Semester" Binding="{Binding Semester}"/>
+                                    <DataGridTextColumn Header="Year Type" Binding="{Binding YearType}"/>
+                                    <DataGridTextColumn Header="Class" Binding="{Binding ClassName}"/>
+                                    <DataGridTextColumn Header="Marks Obtained" Binding="{Binding MarksObtained}"/>
+                                    <DataGridTextColumn Header="Total Marks" Binding="{Binding TotalMarks}"/>
+                                    <DataGridTextColumn Header="Percentage" Binding="{Binding Percentage}"/>
+                                    <DataGridTextColumn Header="Grade" Binding="{Binding Grade}"/>
+                                    <DataGridTextColumn Header="Exam Type" Binding="{Binding ExamType}"/>
+                                    <DataGridTextColumn Header="Exam Date" Binding="{Binding ExamDate, StringFormat=\{0:dd/MM/yyyy\}}"/>
+                                    <DataGridTextColumn Header="Remarks" Binding="{Binding Remarks}"/>
+                                    <DataGridTemplateColumn Header="Actions">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Style="{StaticResource IconButtonStyle}"
+                                                            Command="{Binding DataContext.EditCommand, 
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                            CommandParameter="{Binding}">
+                                                        <fa:IconImage Icon="Edit" Style="{StaticResource SmallButtonIconStyle}"/>
+                                                    </Button>
+                                                    <Button Style="{StaticResource IconButtonStyle}"
+                                                            Command="{Binding DataContext.DeleteCommand, 
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                            CommandParameter="{Binding}">
+                                                        <fa:IconImage Icon="Trash" Style="{StaticResource SmallButtonIconStyle}"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <!-- Marks Analysis Tab -->
+            <TabItem Header="Marks Analysis" Style="{StaticResource TabItemStyle}">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Analysis Filters -->
+                    <GroupBox Header="Analysis Filters" Grid.Row="0" Padding="10" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox Grid.Column="0" Margin="5" Name="AnalysisClassComboBox" DisplayMemberPath="ClassName" SelectedValuePath="ClassID" ToolTip="Select Class"/>
+                            <ComboBox Grid.Column="1" Margin="5" Name="AnalysisSubjectComboBox" DisplayMemberPath="SubjectName" SelectedValuePath="SubjectID" ToolTip="Select Subject"/>
+                            <ComboBox Grid.Column="2" Margin="5" Name="AnalysisExamTypeComboBox" ToolTip="Select Exam Type">
+                                <ComboBoxItem Content="All"/>
+                                <ComboBoxItem Content="Midterm"/>
+                                <ComboBoxItem Content="Final"/>
+                                <ComboBoxItem Content="Quiz"/>
+                                <ComboBoxItem Content="Assignment"/>
+                            </ComboBox>
+                            <DatePicker Grid.Column="3" Margin="5" Name="AnalysisDatePicker" ToolTip="Select Date"/>
+                            <Button Grid.Column="4" Content="Generate Analysis" Margin="5" Name="GenerateAnalysisButton"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Performance Summary -->
+                    <GroupBox Header="Performance Summary" Grid.Row="1" Padding="10" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Summary Statistics -->
+                            <GroupBox Header="Statistics" Grid.Column="0" Margin="0,0,5,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="Class Average:" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Margin="5"/>
+                                    <TextBlock Text="{Binding ClassAverage}" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+                                    <TextBlock Text="Highest Score:" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Margin="5"/>
+                                    <TextBlock Text="{Binding HighestScore}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+                                    <TextBlock Text="Lowest Score:" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Margin="5"/>
+                                    <TextBlock Text="{Binding LowestScore}" Grid.Row="2" Grid.Column="1" Margin="5"/>
+
+                                    <TextBlock Text="Pass Percentage:" Grid.Row="3" Grid.Column="0" FontWeight="Bold" Margin="5"/>
+                                    <TextBlock Text="{Binding PassPercentage}" Grid.Row="3" Grid.Column="1" Margin="5"/>
+
+                                    <TextBlock Text="Total Students:" Grid.Row="4" Grid.Column="0" FontWeight="Bold" Margin="5"/>
+                                    <TextBlock Text="{Binding TotalStudents}" Grid.Row="4" Grid.Column="1" Margin="5"/>
+
+                                    <TextBlock Text="Students Passed:" Grid.Row="5" Grid.Column="0" FontWeight="Bold" Margin="5"/>
+                                    <TextBlock Text="{Binding StudentsPassed}" Grid.Row="5" Grid.Column="1" Margin="5"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Performance Chart -->
+                            <Border Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Margin="5,0,0,0">
+                                <TextBlock Text="Performance Chart Will Appear Here" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <!-- You would integrate a chart control here -->
+                            </Border>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Student Performance Table -->
+                    <GroupBox Header="Student Performance" Grid.Row="2" Padding="10">
+                        <DataGrid Name="PerformanceDataGrid" AutoGenerateColumns="False" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Student ID" Binding="{Binding StudentID}"/>
+                                <DataGridTextColumn Header="Student Name" Binding="{Binding StudentName}"/>
+                                <DataGridTextColumn Header="Marks Obtained" Binding="{Binding MarksObtained}"/>
+                                <DataGridTextColumn Header="Total Marks" Binding="{Binding TotalMarks}"/>
+                                <DataGridTextColumn Header="Percentage" Binding="{Binding Percentage}"/>
+                                <DataGridTextColumn Header="Grade" Binding="{Binding Grade}"/>
+                                <DataGridTextColumn Header="Rank" Binding="{Binding Rank}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

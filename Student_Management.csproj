@@ -17,7 +17,8 @@
 
   <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
@@ -34,13 +35,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\SettingsView.xaml.cs">
+    <Compile Update="View\AcademicEditView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="View\SettingsView.xaml">
+    <Page Update="View\AcademicEditView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

@@ -1,62 +1,36 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Input;
-using System.Windows;
-using Student_Management.View;
-using Student_Management.Repository;
 using Student_Management.Model;
+using Student_Management.View;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using Student_Management.Repository;
+using Student_Management.ViewModel;
 
 namespace Student_Management.ViewModel
 {
-    public class AttendanceDetailViewModel : INotifyPropertyChanged
+    public class AttendanceDetailViewModel : ViewModelBase
     {
-        private readonly StudentRepository _repository;
-        private string _selectedYear;
-        private string _selectedSemester;
-        private ObservableCollection<string> _years;
-        private ObservableCollection<string> _semesters;
-        private ObservableCollection<StudentModel> _students;
-        private ObservableCollection<ClassModel> _classes;
-        private ClassModel _selectedClass;
+        private readonly Action _navigateBack;
+        private readonly StudentRepository _studentRepository;
+        private readonly AttendanceRepository _attendanceRepository;
+
+        #region Properties
+        private DateTime _currentDate;
+        public DateTime CurrentDate
+        {
+            get => _currentDate;
+            set
+            {
+                _currentDate = value;
+                OnPropertyChanged(nameof(CurrentDate));
+            }
+        }
+
         private DateTime _selectedDate;
-        private string _searchText;
-        private Visibility _viewVisibility = Visibility.Visible;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Visibility ViewVisibility
-        {
-            get => _viewVisibility;
-            set
-            {
-                _viewVisibility = value;
-                OnPropertyChanged(nameof(ViewVisibility));
-            }
-        }
-
-        public string SelectedYear
-        {
-            get => _selectedYear;
-            set
-            {
-                _selectedYear = value;
-                OnPropertyChanged(nameof(SelectedYear));
-                LoadClasses(); // Reload classes when year changes
-            }
-        }
-
-        public string SelectedSemester
-        {
-            get => _selectedSemester;
-            set
-            {
-                _selectedSemester = value;
-                OnPropertyChanged(nameof(SelectedSemester));
-                LoadClasses(); // Reload classes when semester changes
-            }
-        }
-
         public DateTime SelectedDate
         {
             get => _selectedDate;
@@ -64,9 +38,72 @@ namespace Student_Management.ViewModel
             {
                 _selectedDate = value;
                 OnPropertyChanged(nameof(SelectedDate));
+                LoadStudents();
             }
         }
 
+        private ObservableCollection<YearConfig> _yearLevels;
+        public ObservableCollection<YearConfig> YearLevels
+        {
+            get => _yearLevels;
+            set
+            {
+                _yearLevels = value;
+                OnPropertyChanged(nameof(YearLevels));
+            }
+        }
+
+        // Make sure the SelectedYearLevel and SelectedSemester properties have proper property change notifications
+        private YearConfig _selectedYearLevel;
+        public YearConfig SelectedYearLevel
+        {
+            get => _selectedYearLevel;
+            set
+            {
+                if (_selectedYearLevel != value)
+                {
+                    _selectedYearLevel = value;
+                    OnPropertyChanged(nameof(SelectedYearLevel));
+                    LoadClasses();
+                }
+            }
+        }
+
+        private ObservableCollection<string> _yearTypes;
+        public ObservableCollection<string> YearTypes
+        {
+            get => _yearTypes;
+            set
+            {
+                _yearTypes = value;
+                OnPropertyChanged(nameof(YearTypes));
+            }
+        }
+
+        private ObservableCollection<int> _semesters;
+        public ObservableCollection<int> Semesters
+        {
+            get => _semesters;
+            set
+            {
+                _semesters = value;
+                OnPropertyChanged(nameof(Semesters));
+            }
+        }
+
+        private int _selectedSemester;
+        public int SelectedSemester
+        {
+            get => _selectedSemester;
+            set
+            {
+                _selectedSemester = value;
+                OnPropertyChanged(nameof(SelectedSemester));
+                LoadClasses();
+            }
+        }
+
+        private ObservableCollection<ClassModel> _classes;
         public ObservableCollection<ClassModel> Classes
         {
             get => _classes;
@@ -77,38 +114,8 @@ namespace Student_Management.ViewModel
             }
         }
 
-        public ClassModel SelectedClass
-        {
-            get => _selectedClass;
-            set
-            {
-                _selectedClass = value;
-                OnPropertyChanged(nameof(SelectedClass));
-                LoadStudents();
-            }
-        }
-
-        public ObservableCollection<string> Years
-        {
-            get => _years;
-            set
-            {
-                _years = value;
-                OnPropertyChanged(nameof(Years));
-            }
-        }
-
-        public ObservableCollection<string> Semesters
-        {
-            get => _semesters;
-            set
-            {
-                _semesters = value;
-                OnPropertyChanged(nameof(Semesters));
-            }
-        }
-
-        public ObservableCollection<StudentModel> Students
+        private ObservableCollection<StudentAttendanceModel> _students;
+        public ObservableCollection<StudentAttendanceModel> Students
         {
             get => _students;
             set
@@ -117,7 +124,7 @@ namespace Student_Management.ViewModel
                 OnPropertyChanged(nameof(Students));
             }
         }
-
+        private string _searchText = string.Empty;
         public string SearchText
         {
             get => _searchText;
@@ -129,154 +136,354 @@ namespace Student_Management.ViewModel
             }
         }
 
-        public ICommand ConfirmCommand { get; }
-        public ICommand ClearSearchCommand { get; }
-        public ICommand BackCommand { get; }
-
-        public AttendanceDetailViewModel()
+        private ObservableCollection<StudentAttendanceModel> _filteredStudents;
+        public ObservableCollection<StudentAttendanceModel> FilteredStudents
         {
-            _repository = new StudentRepository();
-            _selectedDate = DateTime.Today;
+            get => _filteredStudents;
+            set
+            {
+                _filteredStudents = value;
+                OnPropertyChanged(nameof(FilteredStudents));
+            }
+        }
+        #endregion
+
+        #region Commands
+        public ICommand SaveAttendanceCommand { get; private set; }
+        public ICommand BackCommand { get; private set; }
+        public ICommand ClearSearchCommand { get; private set; }
+        #endregion
+
+        public AttendanceDetailViewModel(Action navigateBack)
+        {
+            _navigateBack = navigateBack;
+            _studentRepository = new StudentRepository();
+            _attendanceRepository = new AttendanceRepository();
+            
+            // Initialize collections
+            CurrentDate = DateTime.Now;
+            SelectedDate = DateTime.Now;
+            YearLevels = new ObservableCollection<YearConfig>();
+            Semesters = new ObservableCollection<int> { 1, 2 };
             Classes = new ObservableCollection<ClassModel>();
-            Students = new ObservableCollection<StudentModel>();
+            Students = new ObservableCollection<StudentAttendanceModel>();
+            FilteredStudents = new ObservableCollection<StudentAttendanceModel>();
 
             // Initialize commands
-            ConfirmCommand = new RelayCommand(ConfirmAttendance);
+            SaveAttendanceCommand = new RelayCommand(SaveAttendance, CanSaveAttendance);
+            BackCommand = new RelayCommand(ExecuteNavigateBack);
             ClearSearchCommand = new RelayCommand(ClearSearch);
-            BackCommand = new RelayCommand(GoBack);
-
-            // Load initial data
-            LoadYears();
-            LoadSemesters();
+            
+            // Load data immediately
+            LoadYearLevels();
+            
+            // If we have year levels, select the first one
+            if (YearLevels.Count > 0)
+            {
+                SelectedYearLevel = YearLevels[0];
+                
+                // If we have semesters, select the first one
+                if (Semesters.Count > 0)
+                {
+                    SelectedSemester = Semesters[0];
+                }
+            }
         }
 
-        private void LoadYears()
+        private void ExecuteNavigateBack()
         {
-            Years = _repository.GetAllYears();
+            _navigateBack?.Invoke();
+        }
+
+        private void LoadYearLevels()
+        {
+            try
+            {
+                // Load from database using the same method as MarksViewModel
+                var yearsList = _studentRepository.GetAllYearConfigurations();
+                
+                YearLevels.Clear();
+                foreach (var year in yearsList)
+                {
+                    YearLevels.Add(year);
+                    // Debug output to check what's being loaded - include DisplayName
+                    System.Diagnostics.Debug.WriteLine($"Added year: {year.YearId} - {year.YearLevel} - {year.YearType} - DisplayName: {year.DisplayName}");
+                }
+                
+                System.Diagnostics.Debug.WriteLine($"Loaded {YearLevels.Count} year levels");
+                
+                // If we have years but the dropdown is still empty, check if DisplayName is null
+                if (YearLevels.Count > 0)
+                {
+                    foreach (var year in YearLevels)
+                    {
+                        if (string.IsNullOrEmpty(year.DisplayName))
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Warning: Year {year.YearId} has null or empty DisplayName");
+                            // Try to fix it by setting DisplayName explicitly
+                            if (!string.IsNullOrEmpty(year.YearLevel) && !string.IsNullOrEmpty(year.YearType))
+                            {
+                                // This is a workaround if the property doesn't auto-update
+                                var displayName = $"{year.YearLevel} ({year.YearType})";
+                                System.Diagnostics.Debug.WriteLine($"Setting DisplayName to: {displayName}");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading year levels: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadSemesters()
         {
-            Semesters = _repository.GetAllSemesters();
+            // Semesters are fixed as 1 and 2
+            Semesters.Clear();
+            Semesters.Add(1);
+            Semesters.Add(2);
         }
 
         private void LoadClasses()
         {
-            if (!string.IsNullOrEmpty(SelectedYear) && !string.IsNullOrEmpty(SelectedSemester))
+            if (SelectedYearLevel == null) return;
+
+            try
             {
-                Classes = _repository.GetClassesByYearAndSemester(SelectedYear, SelectedSemester);
+                System.Diagnostics.Debug.WriteLine($"Loading classes for Year: {SelectedYearLevel.YearId} ({SelectedYearLevel.YearLevel}), Semester: {SelectedSemester}");
+                
+                // Get classes for selected year and semester
+                var allClasses = _studentRepository.GetClassesForYear(SelectedYearLevel.YearId);
+                var filteredClasses = allClasses.Where(c => c.Semester == SelectedSemester).ToList();
+                
+                // Clear and update the Classes collection
+                Classes.Clear();
+                foreach (var cls in filteredClasses)
+                {
+                    Classes.Add(cls);
+                    System.Diagnostics.Debug.WriteLine($"Added class: {cls.ClassName} (ID: {cls.ClassID})");
+                }
+
+                System.Diagnostics.Debug.WriteLine($"Found {Classes.Count} classes for {SelectedYearLevel.YearLevel} year, semester {SelectedSemester}");
+                
+                // Load students after classes are loaded
+                LoadStudents();
             }
-            else
+            catch (Exception ex)
             {
-                Classes = new ObservableCollection<ClassModel>();
+                MessageBox.Show($"Error loading classes: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void LoadStudents()
         {
-            if (!string.IsNullOrEmpty(SelectedYear) &&
-                !string.IsNullOrEmpty(SelectedSemester) &&
-                SelectedClass != null)
-            {
-                int year = ConvertYearTextToNumber(SelectedYear);
-                int semester = SelectedSemester.StartsWith("First") ? 1 : 2;
+            if (SelectedYearLevel == null || Classes.Count == 0) return;
 
-                // Get students with their attendance status for the selected date
-                Students = _repository.GetStudentsByYearAndSemester(year, semester, SelectedDate);
-
-                // Filter students by class if needed
-                if (Students != null && Students.Any() && SelectedClass != null)
-                {
-                    var filteredStudents = Students.Where(s =>
-                        s.Year == SelectedClass.Year.ToString() &&
-                        s.Semester == SelectedClass.Semester.ToString()
-                    ).ToList();
-
-                    Students = new ObservableCollection<StudentModel>(filteredStudents);
-                }
-            }
-            else
-            {
-                Students = new ObservableCollection<StudentModel>();
-            }
-        }
-
-        private int ConvertYearTextToNumber(string yearText)
-        {
-            switch (yearText)
-            {
-                case "First Year": return 1;
-                case "Second Year": return 2;
-                case "Third Year": return 3;
-                case "Fourth Year": return 4;
-                case "First Year (Honors)": return 5;
-                case "Second Year (Honors)": return 6;
-                case "Third Year (Honors)": return 7;
-                case "Fourth Year (Honors)": return 8;
-                default: return 1;
-            }
-        }
-
-        private void FilterStudents()
-        {
-            if (string.IsNullOrWhiteSpace(SearchText))
-            {
-                LoadStudents();
-            }
-            else
-            {
-                var filteredStudents = _students
-                    .Where(s => s.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                Students = new ObservableCollection<StudentModel>(filteredStudents);
-            }
-        }
-
-        private void ClearSearch()
-        {
-            SearchText = string.Empty;
-        }
-
-        private void ConfirmAttendance()
-        {
             try
             {
-                if (SelectedClass == null)
+                System.Diagnostics.Debug.WriteLine($"Loading students for Year: {SelectedYearLevel.YearLevel}, Semester: {SelectedSemester}, Date: {SelectedDate:yyyy-MM-dd}");
+                
+                Students.Clear();
+                
+                // Get students for the selected year and semester
+                var studentsInYear = _studentRepository.GetStudentsByYearAndSemester(
+                    SelectedYearLevel.YearId, 
+                    SelectedSemester,
+                    SelectedDate,
+                    0);  // Pass 0 or appropriate class ID if needed
+                
+                System.Diagnostics.Debug.WriteLine($"Found {studentsInYear.Count()} students");
+                
+                foreach (var student in studentsInYear)
                 {
-                    MessageBox.Show("Please select a class first.", "Warning", MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                    return;
+                    var studentAttendance = new StudentAttendanceModel
+                    {
+                        StudentId = int.Parse(student.Id),
+                        Name = student.Name,
+                        RollNo = student.RollNo,
+                        ClassAttendance = new ObservableCollection<ClassAttendance>()
+                    };
+                    
+                    // Add attendance status for each class
+                    foreach (var cls in Classes)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Adding attendance for class: {cls.ClassName}");
+                        
+                        // Check if attendance record exists
+                        bool isPresent = _attendanceRepository.CheckAttendance(
+                            studentAttendance.StudentId,
+                            cls.ClassID,
+                            SelectedDate);
+                        
+                        studentAttendance.ClassAttendance.Add(new ClassAttendance
+                        {
+                            ClassId = cls.ClassID,
+                            ClassName = cls.ClassName,
+                            IsPresent = isPresent
+                        });
+                    }
+                    
+                    Students.Add(studentAttendance);
                 }
-
-                foreach (var student in Students)
-                {
-                    string status = student.IsPresent ? "Present" : "Absent";
-                    _repository.SaveAttendance(
-                        Convert.ToInt32(student.Id),
-                        SelectedClass.ClassID, // Add the ClassID
-                        SelectedDate,
-                        status
-                    );
-                }
-
-                MessageBox.Show("Attendance has been saved successfully!", "Success", MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                
+                System.Diagnostics.Debug.WriteLine($"Loaded {Students.Count} students with {Classes.Count} classes each");
+                OnPropertyChanged(nameof(Students)); // Ensure UI is notified
+                
+                // Apply initial filtering
+                FilterStudents();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving attendance: {ex.Message}", "Error", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                MessageBox.Show($"Error loading students: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        protected void OnPropertyChanged(string propertyName)
+        private bool CanSaveAttendance()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return SelectedYearLevel != null && 
+                   SelectedSemester > 0 && 
+                   Classes.Any() && 
+                   Students.Any();
         }
 
-        private void GoBack()
+        private void SaveAttendance()
         {
-            ViewVisibility = Visibility.Collapsed;
+            try
+            {
+                // Save attendance records to database
+                foreach (var student in Students)
+                {
+                    foreach (var classAttendance in student.ClassAttendance)
+                    {
+                        _attendanceRepository.SaveAttendance(
+                            student.StudentId,
+                            classAttendance.ClassId,
+                            SelectedDate,
+                            classAttendance.IsPresent ? "Present" : "Absent");
+                    }
+                }
+                
+                MessageBox.Show("Attendance saved successfully!", "Success", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                _navigateBack?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving attendance: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        
+        // Add these methods after the SaveAttendance method
+        
+        private void FilterStudents()
+        {
+            if (Students == null) return;
+        
+            FilteredStudents = new ObservableCollection<StudentAttendanceModel>();
+        
+            // If search text is empty, show all students
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                foreach (var student in Students)
+                {
+                    FilteredStudents.Add(student);
+                }
+            }
+            else
+            {
+                // Filter students based on search text (case-insensitive)
+                string searchLower = SearchText.ToLower();
+                foreach (var student in Students)
+                {
+                    if (student.Name?.ToLower().Contains(searchLower) == true || 
+                        student.RollNo?.ToLower().Contains(searchLower) == true)
+                    {
+                        FilteredStudents.Add(student);
+                    }
+                }
+            }
+        
+            System.Diagnostics.Debug.WriteLine($"Filtered students: {FilteredStudents.Count} of {Students.Count}");
+            OnPropertyChanged(nameof(FilteredStudents));
+        }
+        
+        private void ClearSearch()
+        {
+            SearchText = string.Empty;
+            // FilterStudents() will be called by the SearchText property setter
+        }
+
+        public void InitializeData()
+        {
+            // Load initial data
+            LoadYearLevels();
+            
+            // If we have year levels, select the first one
+            if (YearLevels.Count > 0 && SelectedYearLevel == null)
+            {
+                SelectedYearLevel = YearLevels[0];
+                System.Diagnostics.Debug.WriteLine($"Setting SelectedYearLevel to: {SelectedYearLevel.YearLevel} ({SelectedYearLevel.YearType})");
+                
+                // If we have semesters, select the first one
+                if (Semesters.Count > 0)
+                {
+                    SelectedSemester = Semesters[0];
+                    System.Diagnostics.Debug.WriteLine($"Setting SelectedSemester to: {SelectedSemester}");
+                }
+            }
+        }
+    }
+
+    
+
+    public class StudentAttendanceModel : ViewModelBase
+    {
+        public int StudentId { get; set; }
+        public string Name { get; set; }
+        public string RollNo { get; set; }
+        
+        private ObservableCollection<ClassAttendance> _classAttendance;
+        public ObservableCollection<ClassAttendance> ClassAttendance
+        {
+            get => _classAttendance;
+            set
+            {
+                _classAttendance = value;
+                OnPropertyChanged(nameof(ClassAttendance));
+            }
+        }
+
+        private string _remarks;
+        public string Remarks
+        {
+            get => _remarks;
+            set
+            {
+                _remarks = value;
+                OnPropertyChanged(nameof(Remarks));
+            }
+        }
+    }
+    
+    public class ClassAttendance : ViewModelBase
+    {
+        public int ClassId { get; set; }
+        public string ClassName { get; set; }
+        
+        private bool _isPresent;
+        public bool IsPresent
+        {
+            get => _isPresent;
+            set
+            {
+                _isPresent = value;
+                OnPropertyChanged(nameof(IsPresent));
+            }
         }
     }
 }
